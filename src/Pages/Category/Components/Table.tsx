@@ -5,7 +5,7 @@ import useGetCategories from "../Service/Queries/useGetCategory";
 import { useNavigate } from "react-router-dom";
 import useDeleteCategory from "../Service/Mutation/useDeleteCategory";
 import { clientQuery } from "../../../Config/query-client";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, FolderAddOutlined } from "@ant-design/icons";
 
 interface DataType {
   key: string;
@@ -102,6 +102,7 @@ const CategoryTable: React.FC = () => {
         size="large"
         onClick={handleCreate}
       >
+        <FolderAddOutlined />
         Create
       </Button>
       <Table columns={columns} dataSource={dataSource} />

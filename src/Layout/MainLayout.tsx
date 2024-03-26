@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import {
-  BarsOutlined,
+  FolderOpenOutlined,
+  FolderOutlined,
   HomeOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   UploadOutlined,
-  VideoCameraOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu, Button, theme } from "antd";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { loadState } from "../Config/storage";
 
 const { Header, Sider, Content } = Layout;
@@ -20,6 +20,7 @@ const MainLayout: React.FC = () => {
   } = theme.useToken();
   const token = loadState("token");
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     if (!token) {
@@ -31,29 +32,39 @@ const MainLayout: React.FC = () => {
     return null;
   }
 
+  const menuItems = [
+    {
+      key: "1",
+      icon: <HomeOutlined />,
+      label: "Home",
+      to: "/app",
+    },
+    {
+      key: "2",
+      icon: <FolderOutlined />,
+      label: "Category List",
+      to: "/app/category",
+    },
+    {
+      key: "3",
+      icon: <FolderOpenOutlined />,
+      label: "Sub-category List",
+      to: "/sub-category",
+    },
+    { key: "4", icon: <UploadOutlined />, label: "nav 3", to: "/" },
+  ];
+
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Sider trigger={null} collapsible collapsed={collapsed}>
         <div className="demo-logo-vertical" />
-        <Menu
-          theme="dark"
-          mode="inline"
-          defaultSelectedKeys={["1"]}
-          items={[
-            {
-              key: "1",
-              icon: <HomeOutlined />,
-              label: <Link to="/app">Home</Link>,
-            },
-            {
-              key: "2",
-              icon: <BarsOutlined />,
-              label: <Link to="/app/category">Category List</Link>,
-            },
-            { key: "3", icon: <VideoCameraOutlined />, label: "nav 2" },
-            { key: "4", icon: <UploadOutlined />, label: "nav 3" },
-          ]}
-        />
+        <Menu theme="dark" mode="inline" selectedKeys={[location.pathname]}>
+          {menuItems.map((item) => (
+            <Menu.Item key={item.to} icon={item.icon}>
+              <Link to={item.to}>{item.label}</Link>
+            </Menu.Item>
+          ))}
+        </Menu>
       </Sider>
       <Layout>
         <Header style={{ padding: 0, background: colorBgContainer }}>

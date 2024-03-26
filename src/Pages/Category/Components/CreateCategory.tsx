@@ -1,6 +1,7 @@
 import { InboxOutlined, LoadingOutlined } from "@ant-design/icons";
 import { Button, Form, Input, message, FormProps, Upload, Spin } from "antd";
 import useCreateCategory from "../Service/Mutation/useCreateCategory";
+import { useNavigate } from "react-router-dom";
 
 type FieldType = {
   title: string;
@@ -8,6 +9,7 @@ type FieldType = {
 };
 const CreateCategory = () => {
   const { mutate, isLoading } = useCreateCategory();
+  const navigate = useNavigate();
 
   const onFinish = async (values: FieldType) => {
     try {
@@ -18,6 +20,9 @@ const CreateCategory = () => {
 
       await mutate(formData);
       message.success("Category created successfully.");
+      setTimeout(() => {
+        navigate("/app/category");
+      }, 1000);
     } catch (error) {
       console.error("Error creating category:", error);
       message.error("Failed to create category. Please try again later.");
