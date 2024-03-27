@@ -1,23 +1,28 @@
-import React from "react";
-import { Button, Image, Space, Table, Popconfirm } from "antd";
+import React, { useState } from "react";
+import { Button, Image, Space, Table, Popconfirm, Skeleton } from "antd";
 import type { TableProps } from "antd";
 import useGetCategories from "../Service/Queries/useGetCategory";
 import { useNavigate } from "react-router-dom";
 import useDeleteCategory from "../Service/Mutation/useDeleteCategory";
 import { clientQuery } from "../../../Config/query-client";
-import { DeleteOutlined, EditOutlined, FolderAddOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  FolderAddOutlined,
+} from "@ant-design/icons";
 
 interface DataType {
   key: string;
   title: string;
   id: number;
-  image: string;
+  image: string | any;
 }
 
 const CategoryTable: React.FC = () => {
   const { data: CatData } = useGetCategories();
   const [dataSource, setDataSource] = React.useState<DataType[]>([]);
-  const { mutate } = useDeleteCategory();
+  const { mutate, isLoading } = useDeleteCategory();
+  const [active, _] = useState(false);
 
   const handleDelete = (id: number) => {
     mutate(id, {
@@ -49,6 +54,11 @@ const CategoryTable: React.FC = () => {
     navigate("/app/create-category");
   };
 
+  const handleEdit = (id: number) => {
+    navigate(`/app/edit-category/${id}`);
+    console.log(id);
+  };
+
   const columns: TableProps<DataType>["columns"] = [
     {
       title: "ID",
@@ -59,8 +69,14 @@ const CategoryTable: React.FC = () => {
       title: "Image",
       dataIndex: "image",
       key: "image",
-      render: (image: string) => <Image width={100} src={image} alt="" />,
+      render: (image: string | undefined) =>
+        isLoading ? (
+          <Skeleton.Image active={active} />
+        ) : (
+          <Image width={100} src={image} alt="" />
+        ),
     },
+
     {
       title: "Category name",
       dataIndex: "title",
@@ -71,7 +87,12 @@ const CategoryTable: React.FC = () => {
       key: "change",
       render: (_, record) => (
         <Space size="middle">
-          <Button type="primary" size="large" icon={<EditOutlined />}>
+          <Button
+            type="primary"
+            size="large"
+            icon={<EditOutlined />}
+            onClick={() => handleEdit(record.id)}
+          >
             Edit
           </Button>
           <Popconfirm

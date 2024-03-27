@@ -1,8 +1,6 @@
 import React from "react";
-import { Button, Form, Input, Spin } from "antd";
+import { Button, Form, Input, Spin, FormProps } from "antd";
 import usePostUser from "../Service/Mutations/usePostLogin";
-import { FormProps } from "react-hook-form";
-// import Cookies from "js-cookie";
 import { saveState } from "../../../Config/storage";
 import { useNavigate } from "react-router-dom";
 import { LoadingOutlined } from "@ant-design/icons";
@@ -19,14 +17,12 @@ const initialValues = {
 
 const FormComponent: React.FC = () => {
   const { mutate, isLoading } = usePostUser();
-  // const { register, handleSubmit, reset } = useForm<FieldType>(); // Move inside the component
   const navigate = useNavigate();
 
   const onFinish: FormProps["onFinish"] = (data: FieldType) => {
     console.log("Success:", data);
     mutate(data, {
       onSuccess: (res: any) => {
-        // Cookies.set("token", res.token);
         saveState("token", res.token);
         navigate("/app");
         console.log(res);
@@ -40,18 +36,17 @@ const FormComponent: React.FC = () => {
   return (
     <Form
       name="basic"
-      labelCol={{ span: 8 }}
-      wrapperCol={{ span: 25 }}
       style={{ maxWidth: 800 }}
       onFinish={onFinish}
-      // onFinishFailed={onFinishFailed}
-      // autoComplete="off"
+      autoComplete="off"
+      layout="vertical"
       initialValues={initialValues}
     >
       <Form.Item
         label="Phone"
         name="phone_number"
         rules={[{ required: true, message: "Please input your number!" }]}
+        style={{ width: "400px" }}
       >
         <Input size="large" />
       </Form.Item>
@@ -60,12 +55,18 @@ const FormComponent: React.FC = () => {
         label="Password"
         name="password"
         rules={[{ required: true, message: "Please input your password!" }]}
+        style={{ width: "400px" }}
       >
         <Input.Password size="large" />
       </Form.Item>
 
-      <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-        <Button type="primary" size="large" htmlType="submit">
+      <Form.Item>
+        <Button
+          type="primary"
+          size="large"
+          htmlType="submit"
+          style={{ width: "400px" }}
+        >
           {isLoading ? (
             <Spin
               indicator={

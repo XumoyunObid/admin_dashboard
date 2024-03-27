@@ -32,6 +32,10 @@ const MainLayout: React.FC = () => {
     return null;
   }
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+  };
+
   const menuItems = [
     {
       key: "1",
@@ -51,7 +55,23 @@ const MainLayout: React.FC = () => {
       label: "Sub-category List",
       to: "/sub-category",
     },
-    { key: "4", icon: <UploadOutlined />, label: "nav 3", to: "/" },
+    {
+      key: "4",
+      icon: <UploadOutlined />,
+      label: (
+        <button
+          onClick={handleLogout}
+          style={{
+            backgroundColor: "transparent",
+            color: "inherit",
+            border: "none",
+          }}
+        >
+          Logout
+        </button>
+      ),
+      to: "",
+    },
   ];
 
   return (
