@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { Button, Image, Space, Table, Popconfirm, Skeleton } from "antd";
 import type { TableProps } from "antd";
-import useGetCategories from "../Service/Queries/useGetCategory";
 import { useNavigate } from "react-router-dom";
-import useDeleteCategory from "../Service/Mutation/useDeleteCategory";
-import { clientQuery } from "../../../Config/query-client";
 import {
   DeleteOutlined,
   EditOutlined,
   FolderAddOutlined,
 } from "@ant-design/icons";
+import { clientQuery } from "../../Config/query-client";
+import useGetSubCategories from "./Service/Queries/useGetSubCategory";
+import useDeleteBrand from "../Brands/Service/Mutation/useDeleteBrand";
 
 interface DataType {
   key: string;
@@ -18,17 +18,18 @@ interface DataType {
   image: string | any;
 }
 
-const CategoryTable: React.FC = () => {
-  const { data: CatData } = useGetCategories();
+const SubCategories: React.FC = () => {
+  const { data: CatData } = useGetSubCategories();
   const [dataSource, setDataSource] = React.useState<DataType[]>([]);
-  const { mutate, isLoading } = useDeleteCategory();
+  const navigate = useNavigate();
+  const { mutate, isLoading } = useDeleteBrand();
   const [active, _] = useState(false);
 
   const handleDelete = (id: number) => {
     mutate(id, {
       onSuccess: (res: any) => {
         console.log(res);
-        clientQuery.invalidateQueries(["category"]);
+        clientQuery.invalidateQueries(["sub-category"]);
       },
       onError: (err: any) => {
         console.log(err);
@@ -48,14 +49,12 @@ const CategoryTable: React.FC = () => {
     }
   }, [CatData]);
 
-  const navigate = useNavigate();
-
   const handleCreate = () => {
     navigate("/app/create-category");
   };
 
   const handleEdit = (id: number) => {
-    navigate(`/app/edit-category/${id}`);
+    navigate(`/app/edit-brand/${id}`);
     console.log(id);
   };
 
@@ -78,7 +77,7 @@ const CategoryTable: React.FC = () => {
     },
 
     {
-      title: "Category name",
+      title: "Sub Category name",
       dataIndex: "title",
       key: "title",
     },
@@ -96,7 +95,7 @@ const CategoryTable: React.FC = () => {
             Edit
           </Button>
           <Popconfirm
-            title="Are you sure to delete this category?"
+            title="Are you sure to delete this sub category?"
             onConfirm={() => handleDelete(record.id)}
             okText="Yes"
             cancelText="No"
@@ -125,11 +124,11 @@ const CategoryTable: React.FC = () => {
         style={{ width: "200px" }}
       >
         <FolderAddOutlined />
-        Create Category
+        Create Sub Category
       </Button>
       <Table columns={columns} dataSource={dataSource} />
     </div>
   );
 };
 
-export default CategoryTable;
+export default SubCategories;

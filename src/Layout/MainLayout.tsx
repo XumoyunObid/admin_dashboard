@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
+  AppstoreOutlined,
   FolderOpenOutlined,
   FolderOutlined,
   HomeOutlined,
@@ -9,31 +10,26 @@ import {
 } from "@ant-design/icons";
 import { Layout, Menu, Button, theme } from "antd";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { loadState } from "../Config/storage";
+import Cookies from "js-cookie";
 
 const { Header, Sider, Content } = Layout;
 
 const MainLayout: React.FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const token = Cookies.get("token");
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
-  const token = loadState("token");
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  useEffect(() => {
-    if (!token) {
-      navigate("/");
-    }
-  }, [token]);
 
   if (!token) {
-    return null;
+    navigate("/login");
   }
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    Cookies.remove("token");
+    navigate("/login");
   };
 
   const menuItems = [
@@ -53,7 +49,13 @@ const MainLayout: React.FC = () => {
       key: "3",
       icon: <FolderOpenOutlined />,
       label: "Sub-category List",
-      to: "/sub-category",
+      to: "/app/sub-category",
+    },
+    {
+      key: "4",
+      icon: <AppstoreOutlined />,
+      label: "Brands List",
+      to: "/app/brands",
     },
     {
       key: "4",
@@ -70,7 +72,7 @@ const MainLayout: React.FC = () => {
           Logout
         </button>
       ),
-      to: "",
+      to: "/login",
     },
   ];
 

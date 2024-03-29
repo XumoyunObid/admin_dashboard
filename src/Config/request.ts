@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-import { loadState } from "./storage";
+import Cookies from "js-cookie";
 
 const request: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL,
@@ -11,7 +11,7 @@ const request: AxiosInstance = axios.create({
 request.interceptors.request.use(
   (config) => {
     if (config.url !== "/api/admin-login/") {
-      const token = loadState("token");
+      const token = Cookies.get("token");
       if (token) {
         config.headers["Authorization"] = `Token ${token}`;
       } else {

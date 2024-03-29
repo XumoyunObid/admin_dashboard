@@ -1,9 +1,9 @@
 import React from "react";
 import { Button, Form, Input, Spin, FormProps } from "antd";
 import usePostUser from "../Service/Mutations/usePostLogin";
-import { saveState } from "../../../Config/storage";
 import { useNavigate } from "react-router-dom";
 import { LoadingOutlined } from "@ant-design/icons";
+import Cookies from "js-cookie";
 
 type FieldType = {
   phone_number: string;
@@ -23,7 +23,7 @@ const FormComponent: React.FC = () => {
     console.log("Success:", data);
     mutate(data, {
       onSuccess: (res: any) => {
-        saveState("token", res.token);
+        Cookies.set("token", res.token);
         navigate("/app");
         console.log(res);
       },

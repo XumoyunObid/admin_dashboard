@@ -10,20 +10,21 @@ import {
   Image,
 } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
-import useEditCategory from "../Service/Mutation/useEditCategory";
-import useGetCategories from "../Service/Queries/useGetCategory";
+import useEditBrand from "../Service/Mutation/useEditBrand";
+import useGetBrands from "../Service/Queries/useGetBrands";
 
 type FieldType = {
   title: string;
   image?: any;
 };
 
-const EditCategory = () => {
+const EditBrand = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { data } = useGetCategories();
-  const { mutate, isLoading } = useEditCategory();
+  const { data } = useGetBrands();
+  const { mutate, isLoading } = useEditBrand();
   const product = data?.results.find((item) => item.id == Number(id));
+  console.log(product);
 
   const initialValues = {
     title: product?.title || "",
@@ -41,8 +42,8 @@ const EditCategory = () => {
 
       await mutate(formData, {
         onSuccess: () => {
-          message.success("Category edited successfully.");
-          navigate("/app/category");
+          message.success("Brand edited successfully.");
+          navigate("/app/brands");
         },
       });
     } catch (error) {
@@ -139,4 +140,4 @@ const EditCategory = () => {
   );
 };
 
-export default EditCategory;
+export default EditBrand;

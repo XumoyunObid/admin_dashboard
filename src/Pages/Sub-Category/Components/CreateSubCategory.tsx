@@ -1,52 +1,30 @@
-import { InboxOutlined, LoadingOutlined } from "@ant-design/icons";
-import {
-  Button,
-  Form,
-  Input,
-  message,
-  FormProps,
-  Upload,
-  Spin,
-  Image,
-} from "antd";
 import { useNavigate, useParams } from "react-router-dom";
-import useEditCategory from "../Service/Mutation/useEditCategory";
-import useGetCategories from "../Service/Queries/useGetCategory";
+import { InboxOutlined, LoadingOutlined } from "@ant-design/icons";
+import { Button, Form, Input, message, FormProps, Upload, Spin } from "antd";
+import useCreateSubCategory from "../Service/Mutations/useCreateSubcategory";
 
 type FieldType = {
   title: string;
   image?: any;
 };
-
-const EditCategory = () => {
+const CreateSubCategory = () => {
+  const { mutate, isLoading } = useCreateSubCategory();
   const navigate = useNavigate();
-  const { id } = useParams();
-  const { data } = useGetCategories();
-  const { mutate, isLoading } = useEditCategory();
-  const product = data?.results.find((item) => item.id == Number(id));
-
-  const initialValues = {
-    title: product?.title || "",
-    image: product?.image || undefined,
-  };
 
   const onFinish = async (values: FieldType) => {
     try {
       const formData = new FormData();
       formData.append("title", values.title);
-
-      if (values.image && typeof values.image !== "string")
-        formData.append("image", values.image.file);
+      formData.append("image", values.image.file);
       formData.append("parent", "");
 
-      await mutate(formData, {
-        onSuccess: () => {
-          message.success("Category edited successfully.");
-          navigate("/app/category");
-        },
-      });
+      await mutate(formData);
+      message.success("Sub category created successfully.");
+      setTimeout(() => {
+        navigate("/app/category");
+      }, 1000);
     } catch (error) {
-      console.error("Error creating category:", error);
+      console.error("Error creating sub category:", error);
       message.error("Failed to create category. Please try again later.");
     }
   };
@@ -61,9 +39,10 @@ const EditCategory = () => {
     <div>
       <Form
         name="basic"
-        initialValues={initialValues}
+        initialValues={{ remember: true }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
+        autoComplete="off"
         layout="vertical"
         style={{ width: "500px" }}
       >
@@ -77,12 +56,7 @@ const EditCategory = () => {
 
         <Form.Item
           name="image"
-          rules={[
-            {
-              required: initialValues ? false : true,
-              message: "Please upload category image!",
-            },
-          ]}
+          rules={[{ required: true, message: "Please upload category image!" }]}
           valuePropName="file"
         >
           <Upload.Dragger
@@ -100,26 +74,8 @@ const EditCategory = () => {
           </Upload.Dragger>
         </Form.Item>
 
-        {product?.image ? (
-          <Form.Item>
-            <Image
-              style={{
-                width: "100px",
-              }}
-              src={product?.image}
-            />
-          </Form.Item>
-        ) : (
-          ""
-        )}
-
         <Form.Item>
-          <Button
-            type="primary"
-            size="large"
-            style={{ width: "100px" }}
-            htmlType="submit"
-          >
+          <Button type="primary" size="large" htmlType="submit">
             {isLoading ? (
               <Spin
                 indicator={
@@ -130,7 +86,7 @@ const EditCategory = () => {
                 }
               />
             ) : (
-              "Edit"
+              "Submit"
             )}
           </Button>
         </Form.Item>
@@ -139,4 +95,4 @@ const EditCategory = () => {
   );
 };
 
-export default EditCategory;
+export default CreateSubCategory;
