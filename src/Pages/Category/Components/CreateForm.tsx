@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import { InboxOutlined, LoadingOutlined } from "@ant-design/icons";
 import useCreateCategory from "../Service/Mutation/useCreateCategory";
 import { Button, Form, Input, message, FormProps, Upload, Spin } from "antd";
@@ -7,22 +6,22 @@ type FieldType = {
   title: string;
   image?: any;
 };
-const CreateForm = () => {
+const CreateForm = ({ setActiveKey, setParentID }: any) => {
   const { mutate, isLoading } = useCreateCategory();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  const onFinish = async (values: FieldType) => {
+  const onFinish = (values: FieldType) => {
     try {
       const formData = new FormData();
       formData.append("title", values.title);
       formData.append("image", values.image.file);
       formData.append("parent", "");
 
-      await mutate(formData);
+      mutate(formData, {
+        onSuccess: (res) => setParentID(() => res?.data?.id),
+      });
       message.success("Category created successfully.");
-      setTimeout(() => {
-        navigate("/app/category");
-      }, 1000);
+      setActiveKey(2);
     } catch (error) {
       console.error("Error creating category:", error);
       message.error("Failed to create category. Please try again later.");

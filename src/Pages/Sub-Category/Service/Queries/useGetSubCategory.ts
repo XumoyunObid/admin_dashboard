@@ -9,11 +9,11 @@ interface SubCategoryType {
     id: number;
     image: string;
     title: string;
-    children: Array<{
+    parent: {
       id: number;
       image: string;
       title: string;
-    }>;
+    };
   }>;
 }
 

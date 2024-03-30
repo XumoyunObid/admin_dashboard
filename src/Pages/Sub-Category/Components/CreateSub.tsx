@@ -1,16 +1,30 @@
 import { useNavigate } from "react-router-dom";
 import { InboxOutlined, LoadingOutlined } from "@ant-design/icons";
-import { Button, Form, Input, message, FormProps, Upload, Spin } from "antd";
+import {
+  Button,
+  Form,
+  Input,
+  message,
+  FormProps,
+  Upload,
+  Spin,
+  Select,
+  Space,
+} from "antd";
 import useCreateCategory from "../../Category/Service/Mutation/useCreateCategory";
+import useGetCategories from "../../Category/Service/Queries/useGetCategory";
 
 type FieldType = {
   title: string;
   image?: any;
 };
-const CreateSubCategory = ({ parentID }: any) => {
+const CreateSub = ({ parentID }: any) => {
   const { mutate, isLoading } = useCreateCategory();
   const navigate = useNavigate();
-  console.log(parentID);
+  const parents = useGetCategories();
+
+  const parentOptions = parents?.data?.results.map((item) => item);
+  console.log(parentOptions);
 
   const onFinish = async (values: FieldType) => {
     try {
@@ -35,6 +49,9 @@ const CreateSubCategory = ({ parentID }: any) => {
   ) => {
     console.log("Failed:", errorInfo);
   };
+  const handleChange = (value: string) => {
+    console.log(`selected ${value}`);
+  };
 
   return (
     <div>
@@ -47,6 +64,21 @@ const CreateSubCategory = ({ parentID }: any) => {
         layout="vertical"
         style={{ width: "500px" }}
       >
+        <Form.Item
+          label="Parent title"
+          name="parent"
+          rules={[
+            { required: true, message: "Please select parent category title!" },
+          ]}
+        >
+          <Space>
+            <Select
+              style={{ width: 120 }}
+              onChange={handleChange}
+              options={parentOptions}
+            />
+          </Space>
+        </Form.Item>
         <Form.Item
           label="Title"
           name="title"
@@ -96,4 +128,4 @@ const CreateSubCategory = ({ parentID }: any) => {
   );
 };
 
-export default CreateSubCategory;
+export default CreateSub;

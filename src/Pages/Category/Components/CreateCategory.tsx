@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Tabs } from "antd";
 import type { TabsProps } from "antd";
 import CreateForm from "./CreateForm";
@@ -9,24 +9,27 @@ const onChange = (key: string) => {
 };
 
 const CreateCategory: React.FC = () => {
-  // const [activekey, setActiveKey] = useState();
+  const [activekey, setActiveKey] = useState(1);
+  const [parentID, setParentID] = useState();
 
   const items: TabsProps["items"] = [
     {
       key: "1",
       label: "Create Category",
-      children: <CreateForm />,
+      children: (
+        <CreateForm setActiveKey={setActiveKey} setParentID={setParentID} />
+      ),
     },
     {
       key: "2",
       label: "Sub Category",
-      children: <CreateSubCategory />,
+      children: <CreateSubCategory parentID={parentID} />,
     },
   ];
 
   return (
     <div>
-      <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
+      <Tabs activeKey={`${activekey}`} items={items} onChange={onChange} />
     </div>
   );
 };

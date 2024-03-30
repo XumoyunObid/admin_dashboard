@@ -9,7 +9,7 @@ import {
 } from "@ant-design/icons";
 import { clientQuery } from "../../Config/query-client";
 import useGetSubCategories from "./Service/Queries/useGetSubCategory";
-import useDeleteBrand from "../Brands/Service/Mutation/useDeleteBrand";
+import useDeleteSubCategory from "./Service/Mutations/useDeleteSubCategory";
 
 interface DataType {
   key: string;
@@ -22,7 +22,7 @@ const SubCategories: React.FC = () => {
   const { data: CatData } = useGetSubCategories();
   const [dataSource, setDataSource] = React.useState<DataType[]>([]);
   const navigate = useNavigate();
-  const { mutate, isLoading } = useDeleteBrand();
+  const { mutate, isLoading } = useDeleteSubCategory();
   const [active, _] = useState(false);
 
   const handleDelete = (id: number) => {
@@ -50,11 +50,11 @@ const SubCategories: React.FC = () => {
   }, [CatData]);
 
   const handleCreate = () => {
-    navigate("/app/create-category");
+    navigate("/app/create-subcategory");
   };
 
   const handleEdit = (id: number) => {
-    navigate(`/app/edit-brand/${id}`);
+    navigate(`/app/edit-subcategory/${id}`);
     console.log(id);
   };
 
