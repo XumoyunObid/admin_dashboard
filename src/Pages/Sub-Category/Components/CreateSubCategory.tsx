@@ -10,7 +10,6 @@ type FieldType = {
 const CreateSubCategory = ({ parentID }: any) => {
   const { mutate, isLoading } = useCreateCategory();
   const navigate = useNavigate();
-  console.log(parentID);
 
   const onFinish = async (values: FieldType) => {
     try {

@@ -55,7 +55,6 @@ const SubCategories: React.FC = () => {
 
   const handleEdit = (id: number) => {
     navigate(`/app/edit-subcategory/${id}`);
-    console.log(id);
   };
 
   const columns: TableProps<DataType>["columns"] = [

@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
 import { InboxOutlined, LoadingOutlined } from "@ant-design/icons";
 import {
   Button,
@@ -18,26 +18,34 @@ type FieldType = {
   title: string;
   image?: any;
 };
-const CreateSub = ({ parentID }: any) => {
+
+const CreateSub: React.FC = ({ setActiveKey, setParentID }: any) => {
   const { mutate, isLoading } = useCreateCategory();
-  const navigate = useNavigate();
   const parents = useGetCategories();
 
-  const parentOptions = parents?.data?.results.map((item) => item);
-  console.log(parentOptions);
+  const parentOptions = parents?.data?.results.map((item) => ({
+    value: item.id,
+    label: item.title,
+  }));
 
-  const onFinish = async (values: FieldType) => {
+  const [selectedParent, setSelectedParent] = useState<string | undefined>(
+    undefined
+  );
+
+  const onFinish = (values: FieldType) => {
     try {
       const formData = new FormData();
       formData.append("title", values.title);
       formData.append("image", values.image.file);
-      formData.append("parent", parentID);
+      formData.append("parent", selectedParent || "");
 
-      await mutate(formData);
+      mutate(formData, {
+        onSuccess: (res) => setParentID(() => res?.data?.id
+        
+        ),
+      });
+      setActiveKey(2);
       message.success("Sub category created successfully.");
-      setTimeout(() => {
-        navigate("/app/category");
-      }, 1000);
     } catch (error) {
       console.error("Error creating sub category:", error);
       message.error("Failed to create category. Please try again later.");
@@ -49,8 +57,10 @@ const CreateSub = ({ parentID }: any) => {
   ) => {
     console.log("Failed:", errorInfo);
   };
+
   const handleChange = (value: string) => {
     console.log(`selected ${value}`);
+    setSelectedParent(value);
   };
 
   return (
@@ -64,16 +74,11 @@ const CreateSub = ({ parentID }: any) => {
         layout="vertical"
         style={{ width: "500px" }}
       >
-        <Form.Item
-          label="Parent title"
-          name="parent"
-          rules={[
-            { required: true, message: "Please select parent category title!" },
-          ]}
-        >
+        <Form.Item label="Parent title" name="parent">
           <Space>
             <Select
-              style={{ width: 120 }}
+              defaultValue="Sub Category Title"
+              style={{ width: 500 }}
               onChange={handleChange}
               options={parentOptions}
             />

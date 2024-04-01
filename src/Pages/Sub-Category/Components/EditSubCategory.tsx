@@ -10,8 +10,8 @@ import {
   Spin,
   Image,
 } from "antd";
-import useCreateCategory from "../../Category/Service/Mutation/useCreateCategory";
 import useGetSubCategories from "../Service/Queries/useGetSubCategory";
+import useEditSubCategory from "../Service/Mutations/useEditSubCategory";
 
 type FieldType = {
   title: string;
@@ -19,18 +19,16 @@ type FieldType = {
 };
 const EditSubCategory = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { data } = useGetSubCategories();
+  const { mutate, isLoading } = useEditSubCategory();
+
   const product = data?.results.find((item) => item.id == Number(id));
-  const parentID = product?.parent?.id;
-  console.log(parentID);
 
   const initialValue = {
     title: product?.title || "",
     image: product?.image || undefined,
   };
-
-  const { mutate, isLoading } = useCreateCategory();
-  const navigate = useNavigate();
 
   const onFinish = (values: FieldType) => {
     try {
@@ -38,16 +36,15 @@ const EditSubCategory = () => {
       formData.append("title", values.title);
       if (values.image && typeof values.image !== "string")
         formData.append("image", values.image.file);
-      formData.append("parent", "");
 
       mutate(formData, {
         onSuccess: () => {
-          message.success("Sub category created successfully.");
+          message.success("Sub category edited successfully.");
+          setTimeout(() => {
+            navigate("/app/sub-category");
+          }, 1000);
         },
       });
-      setTimeout(() => {
-        navigate("/app/sub-category");
-      }, 1000);
     } catch (error) {
       console.error("Error creating sub category:", error);
       message.error("Failed to create category. Please try again later.");

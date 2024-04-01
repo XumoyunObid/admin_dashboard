@@ -23,6 +23,7 @@ const CategoryTable: React.FC = () => {
   const [dataSource, setDataSource] = React.useState<DataType[]>([]);
   const { mutate, isLoading } = useDeleteCategory();
   const [active, _] = useState(false);
+  console.log(CatData?.results);
 
   const handleDelete = (id: number) => {
     mutate(id, {
