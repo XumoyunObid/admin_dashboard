@@ -9,9 +9,9 @@ import CreateCategory from "./Pages/Category/Components/CreateCategory";
 import Brands from "./Pages/Brands/Brands";
 import CreateBrand from "./Pages/Brands/Components/CreateBrand";
 import EditBrand from "./Pages/Brands/Components/EditBrand";
-import EditSubCategory from "./Pages/Sub-Category/Components/EditSubCategory";
 import SubCategoryTab from "./Pages/Sub-Category/SubCategoryTab";
 import AttributeTable from "./Pages/Attributes/Attribute";
+import EditSubAndAttrTab from "./Pages/Sub-Category/Components/EditSubAndAttrTab";
 
 function App() {
   return (
@@ -27,7 +27,7 @@ function App() {
           <Route path="brands" element={<Brands />} />
           <Route path="edit-brand/:id" element={<EditBrand />} />
           <Route path="create-subcategory" element={<SubCategoryTab />} />
-          <Route path="edit-subcategory/:id" element={<EditSubCategory />} />
+          <Route path="edit-subcategory/:id" element={<EditSubAndAttrTab />} />
           <Route path="create-brand" element={<CreateBrand />} />
           <Route path="attributes" element={<AttributeTable />} />
         </Route>

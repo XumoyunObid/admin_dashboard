@@ -17,13 +17,14 @@ type FieldType = {
   title: string;
   image?: any;
 };
-const EditSubCategory = () => {
+const EditSubCategory = ({ setParentID }: any) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { data } = useGetSubCategories();
   const { mutate, isLoading } = useEditSubCategory();
 
   const product = data?.results.find((item) => item.id == Number(id));
+  setParentID(product?.parent?.id);
 
   const initialValue = {
     title: product?.title || "",
