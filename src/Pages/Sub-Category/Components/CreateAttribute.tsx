@@ -1,12 +1,38 @@
 import React from "react";
 import { MinusCircleOutlined } from "@ant-design/icons";
 import { Button, Card, Form, Input, Space } from "antd";
+import useCreateAttribute from "../Service/Mutations/useCreateAttribute";
+import { useNavigate } from "react-router-dom";
 
 const CreateAttribute: React.FC = ({ parentID }: any) => {
   const [form] = Form.useForm();
+  const { mutate } = useCreateAttribute();
+  const navigate = useNavigate();
 
   const onFinish = (values: any) => {
-    console.log(values);
+    try {
+      const attributes = values?.attr_list?.map((i: any) => {
+        return {
+          attr_list: [
+            {
+              title: i.title,
+              values: i.values?.map((item: any) => {
+                return item.first;
+              }),
+              category: [parentID],
+            },
+          ],
+        };
+      });
+      const attr_list = attributes[0];
+      mutate(attr_list, {
+        onSuccess: () => {
+          navigate("/app/sub-category");
+        },
+      });
+    } catch (error) {
+      console.error("Error creating category:", error);
+    }
   };
 
   return (
@@ -83,7 +109,12 @@ const CreateAttribute: React.FC = ({ parentID }: any) => {
           </div>
         )}
       </Form.List>
-      <Button htmlType="submit" type="primary">
+      <Button
+        htmlType="submit"
+        size="large"
+        style={{ marginTop: "25px" }}
+        type="primary"
+      >
         Submit
       </Button>
     </Form>

@@ -1,15 +1,15 @@
-import React, { useState } from "react";
-import { Button, Image, Space, Table, Popconfirm, Skeleton } from "antd";
+import React from "react";
+import { Button, Space, Table, Popconfirm } from "antd";
 import type { TableProps } from "antd";
-import useGetCategories from "../Service/Queries/useGetCategory";
-import { useNavigate } from "react-router-dom";
-import useDeleteCategory from "../Service/Mutation/useDeleteCategory";
-import { clientQuery } from "../../../Config/query-client";
 import {
   DeleteOutlined,
   EditOutlined,
   FolderAddOutlined,
 } from "@ant-design/icons";
+import useGetAttributes from "./Service/Query/useGetAttributes";
+import useDeleteCategory from "../Category/Service/Mutation/useDeleteCategory";
+import { clientQuery } from "../../Config/query-client";
+import { useNavigate } from "react-router-dom";
 
 interface DataType {
   key: string;
@@ -18,17 +18,16 @@ interface DataType {
   image: string | any;
 }
 
-const CategoryTable: React.FC = () => {
-  const { data: CatData } = useGetCategories();
+const AttributeTable: React.FC = () => {
+  const { data: CatData } = useGetAttributes();
   const [dataSource, setDataSource] = React.useState<DataType[]>([]);
-  const { mutate, isLoading } = useDeleteCategory();
-  const [active, _] = useState(false);
+  const { mutate } = useDeleteCategory();
 
   const handleDelete = (id: number) => {
     mutate(id, {
       onSuccess: (res: any) => {
         console.log(res);
-        clientQuery.invalidateQueries(["category"]);
+        clientQuery.invalidateQueries(["attributes"]);
       },
       onError: (err: any) => {
         console.log(err);
@@ -42,7 +41,7 @@ const CategoryTable: React.FC = () => {
         key: index.toString(),
         title: category.title,
         id: category.id,
-        image: category.image,
+        parent: <strong>{category?.category_title[0]?.title}</strong>,
       }));
       setDataSource(newData);
     }
@@ -66,19 +65,13 @@ const CategoryTable: React.FC = () => {
       key: "id",
     },
     {
-      title: "Image",
-      dataIndex: "image",
-      key: "image",
-      render: (image: string | undefined) =>
-        isLoading ? (
-          <Skeleton.Image active={active} />
-        ) : (
-          <Image width={80} src={image} alt="" />
-        ),
+      title: "Parent category title",
+      dataIndex: "parent",
+      key: "parent",
     },
 
     {
-      title: "Category name",
+      title: "Attribute name",
       dataIndex: "title",
       key: "title",
     },
@@ -125,11 +118,11 @@ const CategoryTable: React.FC = () => {
         style={{ width: "200px" }}
       >
         <FolderAddOutlined />
-        Create Category
+        Create Attribute
       </Button>
       <Table columns={columns} dataSource={dataSource} />
     </div>
   );
 };
 
-export default CategoryTable;
+export default AttributeTable;

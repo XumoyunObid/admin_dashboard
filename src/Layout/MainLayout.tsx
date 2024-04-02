@@ -58,7 +58,13 @@ const MainLayout: React.FC = () => {
       to: "/app/brands",
     },
     {
-      key: "4",
+      key: "5",
+      icon: <AppstoreOutlined />,
+      label: "Attribute List",
+      to: "/app/attributes",
+    },
+    {
+      key: "6",
       icon: <UploadOutlined />,
       label: (
         <button
