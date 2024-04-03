@@ -9,13 +9,13 @@ import {
 import useGetAttributes from "./Service/Query/useGetAttributes";
 import useDeleteCategory from "../Category/Service/Mutation/useDeleteCategory";
 import { clientQuery } from "../../Config/query-client";
-import { useNavigate } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 
 interface DataType {
   key: string;
   title: string;
   id: number;
-  image: string | any;
+  parent: string;
 }
 
 const AttributeTable: React.FC = () => {

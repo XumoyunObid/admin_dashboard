@@ -1,13 +1,19 @@
 import React from "react";
 import { MinusCircleOutlined } from "@ant-design/icons";
 import { Button, Card, Form, Input, Space } from "antd";
-import useCreateAttribute from "../Service/Mutations/useCreateAttribute";
+import useCreateAttribute from "../Service/Mutation/useCreateAttribute";
 import { useNavigate } from "react-router-dom";
 
-const CreateAttribute: React.FC = ({ parentID }: any) => {
+const CreateAttribute: React.FC = ({ parentID, attribute }: any) => {
   const [form] = Form.useForm();
   const { mutate } = useCreateAttribute();
   const navigate = useNavigate();
+  console.log(attribute[0].values.map((i: any) => i.value));
+
+  const initialValue = {
+    title: attribute[0].title,
+    values: attribute[0].values?.map((i) => i.value),
+  };
 
   const onFinish = (values: any) => {
     try {
@@ -43,7 +49,7 @@ const CreateAttribute: React.FC = ({ parentID }: any) => {
       name="dynamic_form_complex"
       style={{ maxWidth: 600 }}
       autoComplete="off"
-      initialValues={{ items: [{}] }}
+      initialValues={initialValue}
       onFinish={onFinish}
     >
       <Form.List name="attr_list">

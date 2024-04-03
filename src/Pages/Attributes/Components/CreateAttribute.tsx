@@ -1,9 +1,8 @@
 import React from "react";
 import { MinusCircleOutlined } from "@ant-design/icons";
 import { Button, Card, Form, Input, Space } from "antd";
-import useCreateAttribute from "../Service/Mutations/useCreateAttribute";
+import useCreateAttribute from "../Service/Mutation/useCreateAttribute";
 import { useNavigate } from "react-router-dom";
-
 
 const CreateAttribute: React.FC = ({ parentID }: any) => {
   const [form] = Form.useForm();

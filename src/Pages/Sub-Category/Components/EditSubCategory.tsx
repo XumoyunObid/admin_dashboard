@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { InboxOutlined, LoadingOutlined } from "@ant-design/icons";
 import {
   Button,
@@ -10,25 +10,25 @@ import {
   Spin,
   Image,
 } from "antd";
-import useGetSubCategories from "../Service/Queries/useGetSubCategory";
 import useEditSubCategory from "../Service/Mutations/useEditSubCategory";
+import useGetSingleSubCategories from "../Service/Queries/useGetSingleSub";
 
 type FieldType = {
   title: string;
   image?: any;
 };
-const EditSubCategory = ({ setParentID }: any) => {
-  const { id } = useParams();
+const EditSubCategory = ({ setParentID, setAttributes }: any) => {
   const navigate = useNavigate();
-  const { data } = useGetSubCategories();
+  const { data } = useGetSingleSubCategories();
   const { mutate, isLoading } = useEditSubCategory();
+  console.log(data);
 
-  const product = data?.results.find((item) => item.id == Number(id));
-  setParentID(product?.parent?.id);
+  setParentID(() => data?.id);
+  setAttributes(() => data?.attributes);
 
   const initialValue = {
-    title: product?.title || "",
-    image: product?.image || undefined,
+    title: data?.title || "",
+    image: data?.image || undefined,
   };
 
   const onFinish = (values: FieldType) => {
@@ -102,13 +102,13 @@ const EditSubCategory = ({ setParentID }: any) => {
           </Upload.Dragger>
         </Form.Item>
 
-        {product?.image ? (
+        {data?.image ? (
           <Form.Item>
             <Image
               style={{
                 width: "100px",
               }}
-              src={product?.image}
+              src={data?.image}
             />
           </Form.Item>
         ) : (

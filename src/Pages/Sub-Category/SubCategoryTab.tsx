@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Tabs } from "antd";
 import type { TabsProps } from "antd";
 import CreateSub from "./Components/CreateSub";
-import CreateAttribute from "./Components/CreateAttribute";
+import CreateAttribute from "../Attributes/Components/CreateAttribute";
 
 const SubCategoryTab: React.FC = () => {
   const [activekey, setActiveKey] = useState(1);
