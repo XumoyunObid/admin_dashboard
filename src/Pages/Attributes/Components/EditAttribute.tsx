@@ -1,37 +1,54 @@
 import React from "react";
 import { MinusCircleOutlined } from "@ant-design/icons";
 import { Button, Card, Form, Input, Space } from "antd";
-import useCreateAttribute from "../Service/Mutation/useCreateAttribute";
 import { useNavigate } from "react-router-dom";
+import useEditAttribute from "../Service/Mutation/useEditAttribute";
+
+interface AttrType {
+  attributes: {
+    attribute_id?: string;
+    title: string;
+    values: {
+      value: string;
+      value_id: string;
+    }[];
+  }[];
+  category_id: string;
+}
 
 const CreateAttribute: React.FC = ({ parentID, attribute }: any) => {
   const [form] = Form.useForm();
-  const { mutate } = useCreateAttribute();
+  const { mutate } = useEditAttribute();
   const navigate = useNavigate();
-  console.log(attribute[0].values.map((i: any) => i.value));
 
   const initialValue = {
-    title: attribute[0].title,
-    values: attribute[0].values?.map((i) => i.value),
+    title: attribute[0].title || "",
+    values: attribute[0].values?.map((i: any) => i.value) || [{ value: "" }],
   };
 
   const onFinish = (values: any) => {
     try {
       const attributes = values?.attr_list?.map((i: any) => {
         return {
-          attr_list: [
+          attributes: [
             {
+              attribute_id: attribute[0]?.id ?? null,
               title: i.title,
-              values: i.values?.map((item: any) => {
-                return item.first;
+              values: i.values?.map((item: any, index: number) => {
+                return {
+                  value: item.first,
+                  value_id: attribute[0]?.values[index].id,
+                };
               }),
-              category: [parentID],
             },
           ],
         };
       });
-      const attr_list = attributes[0];
-      mutate(attr_list, {
+      const attr: AttrType = {
+        attributes: attributes[0]?.attributes,
+        category_id: parentID ?? null,
+      };
+      mutate(attr, {
         onSuccess: () => {
           navigate("/app/sub-category");
         },
