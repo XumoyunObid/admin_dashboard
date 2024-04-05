@@ -21,7 +21,6 @@ const EditSubCategory = ({ setParentID, setAttributes }: any) => {
   const navigate = useNavigate();
   const { data } = useGetSingleSubCategories();
   const { mutate, isLoading } = useEditSubCategory();
-  console.log(data);
 
   setParentID(() => data?.id);
   setAttributes(() => data?.attributes);
@@ -62,7 +61,9 @@ const EditSubCategory = ({ setParentID, setAttributes }: any) => {
     <div>
       <Form
         name="basic"
-        initialValues={initialValue}
+        initialValues={{
+          title: data?.title,
+        }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off"

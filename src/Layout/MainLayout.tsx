@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  ApartmentOutlined,
   AppstoreOutlined,
   FolderOpenOutlined,
   FolderOutlined,
@@ -59,7 +60,7 @@ const MainLayout: React.FC = () => {
     },
     {
       key: "5",
-      icon: <AppstoreOutlined />,
+      icon: <ApartmentOutlined />,
       label: "Attribute List",
       to: "/app/attributes",
     },

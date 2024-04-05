@@ -115,16 +115,18 @@ const SubCategories: React.FC = () => {
 
   return (
     <div className="category">
-      <Button
-        className="create-btn"
-        type="primary"
-        size="large"
-        onClick={handleCreate}
-        style={{ width: "200px" }}
-      >
-        <FolderAddOutlined />
-        Create Sub Category
-      </Button>
+      <div style={{ display: "flex", alignItems: "center", gap: "100px" }}>
+        <Button
+          className="create-btn"
+          type="primary"
+          size="large"
+          onClick={handleCreate}
+          style={{ width: "200px" }}
+        >
+          <FolderAddOutlined />
+          Create Sub Category
+        </Button>
+      </div>
       <Table columns={columns} dataSource={dataSource} />
     </div>
   );

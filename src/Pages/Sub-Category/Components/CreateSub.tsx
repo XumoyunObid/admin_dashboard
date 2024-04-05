@@ -41,7 +41,6 @@ const CreateSub: React.FC = ({ setActiveKey, setParentID }: any) => {
 
       mutate(formData, {
         onSuccess: (res) => setParentID(() => res?.data?.id
-        
         ),
       });
       setActiveKey(2);

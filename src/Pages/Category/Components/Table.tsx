@@ -10,6 +10,9 @@ import {
   EditOutlined,
   FolderAddOutlined,
 } from "@ant-design/icons";
+import useDebounce from "../../../Hooks/useDebounce";
+import useSearchCategory from "../Service/Queries/useSearchCategory";
+import Search from "../../../Components/Search/Search";
 
 interface DataType {
   key: string;
@@ -23,11 +26,13 @@ const CategoryTable: React.FC = () => {
   const [dataSource, setDataSource] = React.useState<DataType[]>([]);
   const { mutate, isLoading } = useDeleteCategory();
   const [active, _] = useState(false);
+  const [value, setValue] = useState("");
+  const search = useDebounce(value);
+  const { data } = useSearchCategory(search);
 
   const handleDelete = (id: number) => {
     mutate(id, {
-      onSuccess: (res: any) => {
-        console.log(res);
+      onSuccess: () => {
         clientQuery.invalidateQueries(["category"]);
       },
       onError: (err: any) => {
@@ -56,7 +61,6 @@ const CategoryTable: React.FC = () => {
 
   const handleEdit = (id: number) => {
     navigate(`/app/edit-category/${id}`);
-    console.log(id);
   };
 
   const columns: TableProps<DataType>["columns"] = [
@@ -117,16 +121,84 @@ const CategoryTable: React.FC = () => {
 
   return (
     <div className="category">
-      <Button
-        className="create-btn"
-        type="primary"
-        size="large"
-        onClick={handleCreate}
-        style={{ width: "200px" }}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "100px",
+        }}
       >
-        <FolderAddOutlined />
-        Create Category
-      </Button>
+        <Button
+          className="create-btn"
+          type="primary"
+          size="large"
+          onClick={handleCreate}
+          style={{ width: "200px" }}
+        >
+          <FolderAddOutlined />
+          Create Category
+        </Button>
+        {/* <div>
+          <Input
+            style={{
+              width: "550px",
+              padding: "10px",
+              position: "relative",
+              border: "2px solid #1677ff",
+              borderRadius: "0px",
+            }}
+            onFocus={() => setShow(true)}
+            type="text"
+            placeholder="Search "
+            onChange={(e) => setValue(e.target.value)}
+          />
+          {show && (
+            <>
+              {value.length > 2 && (
+                <ul
+                  style={{
+                    top: 157,
+                    border: "2px solid #1677ff",
+                    padding: "15px",
+                    backgroundColor: "white",
+                    zIndex: 10,
+                    position: "absolute",
+                    width: "550px",
+                    listStyle: "none",
+                    borderTop: "none",
+                    borderBottomLeftRadius: "8px",
+                    borderBottomRightRadius: "8px",
+                    outlineColor: "#1677ff",
+                  }}
+                >
+                  {data?.results?.map(
+                    (item: { title: string; id: number; image: string }) => (
+                      <Link
+                        key={item?.id}
+                        to={`/app/edit-category/${item?.id}`}
+                      >
+                        <li
+                          style={{
+                            marginBottom: "15px",
+                            padding: "5px",
+                            display: "flex",
+                            gap: "10px",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Image width={80} src={item?.image} alt="" />
+                          <p style={{ color: "black" }}>{item?.title}</p>
+                        </li>
+                      </Link>
+                    )
+                  )}
+                </ul>
+              )}
+            </>
+          )}
+        </div> */}
+        <Search data={data} value={value} setValue={setValue} />
+      </div>
       <Table columns={columns} dataSource={dataSource} />
     </div>
   );

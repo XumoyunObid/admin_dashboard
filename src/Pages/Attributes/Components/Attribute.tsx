@@ -3,6 +3,7 @@ import { MinusCircleOutlined } from "@ant-design/icons";
 import { Button, Card, Form, Input, Space } from "antd";
 import { useNavigate } from "react-router-dom";
 import useEditAttribute from "../Service/Mutation/useEditAttribute";
+import useGetSingleAttribute from "../Service/Query/useGetSingleAttribute";
 // import useDeleteAttributeValue from "../Service/Mutation/useDeleteAttributeValue";
 
 interface AttrType {
@@ -17,17 +18,24 @@ interface AttrType {
   category_id: string;
 }
 
-const EditAttribute: React.FC = ({ parentID, attribute }: any) => {
+const CreateAttribute: React.FC = () => {
   const [form] = Form.useForm();
+  const { data } = useGetSingleAttribute();
+  const parentID = data?.category[0];
+
   const { mutate } = useEditAttribute();
   // const {mutate:DelValue} = useDeleteAttributeValue()
   const navigate = useNavigate();
 
   const initialValue = {
-    attr_list: attribute?.map((attr: { title: any; values: any[] }) => ({
-      title: attr.title || "",
-      values: attr.values?.map((i) => ({ first: i.value })) || [{ first: "" }],
-    })),
+    attr_list: [
+      {
+        title: data?.title || "",
+        values: data?.values.map((value: any) => ({
+          first: value?.value || "",
+        })) || [{ first: "" }],
+      },
+    ],
   };
 
   const onFinish = (values: any) => {
@@ -36,12 +44,12 @@ const EditAttribute: React.FC = ({ parentID, attribute }: any) => {
         return {
           attributes: [
             {
-              attribute_id: attribute[0]?.id ?? null,
+              attribute_id: data[0]?.id ?? null,
               title: i.title,
               values: i.values?.map((item: any, index: number) => {
                 return {
                   value: item.first,
-                  value_id: attribute[0]?.values[index]?.id ?? null,
+                  value_id: data[0]?.values[index]?.id ?? null,
                 };
               }),
             },
@@ -54,7 +62,7 @@ const EditAttribute: React.FC = ({ parentID, attribute }: any) => {
       };
       mutate(attr, {
         onSuccess: () => {
-          navigate("/app/sub-category");
+          navigate("/app/attributes");
         },
       });
     } catch (error) {
@@ -152,4 +160,4 @@ const EditAttribute: React.FC = ({ parentID, attribute }: any) => {
   );
 };
 
-export default EditAttribute;
+export default CreateAttribute;

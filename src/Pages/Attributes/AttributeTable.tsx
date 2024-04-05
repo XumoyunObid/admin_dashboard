@@ -7,9 +7,9 @@ import {
   FolderAddOutlined,
 } from "@ant-design/icons";
 import useGetAttributes from "./Service/Query/useGetAttributes";
-import useDeleteCategory from "../Category/Service/Mutation/useDeleteCategory";
 import { clientQuery } from "../../Config/query-client";
-import { useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import useDeleteAttribute from "./Service/Mutation/useDeleteAttribute";
 
 interface DataType {
   key: string;
@@ -21,7 +21,7 @@ interface DataType {
 const AttributeTable: React.FC = () => {
   const { data: CatData } = useGetAttributes();
   const [dataSource, setDataSource] = React.useState<DataType[]>([]);
-  const { mutate } = useDeleteCategory();
+  const { mutate } = useDeleteAttribute();
 
   const handleDelete = (id: number) => {
     mutate(id, {
@@ -54,7 +54,7 @@ const AttributeTable: React.FC = () => {
   };
 
   const handleEdit = (id: number) => {
-    navigate(`/app/edit-category/${id}`);
+    navigate(`/app/attribute/${id}`);
     console.log(id);
   };
 
