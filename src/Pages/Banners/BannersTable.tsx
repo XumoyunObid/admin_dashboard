@@ -1,18 +1,15 @@
 import React, { useState } from "react";
 import { Button, Image, Space, Table, Popconfirm, Skeleton } from "antd";
 import type { TableProps } from "antd";
-import useGetCategories from "../Service/Queries/useGetCategory";
 import { useNavigate } from "react-router-dom";
-import useDeleteCategory from "../Service/Mutation/useDeleteCategory";
-import { clientQuery } from "../../../Config/query-client";
+import { clientQuery } from "../../Config/query-client";
 import {
   DeleteOutlined,
   EditOutlined,
   FolderAddOutlined,
 } from "@ant-design/icons";
-import useDebounce from "../../../Hooks/useDebounce";
-import useSearchCategory from "../Service/Queries/useSearchCategory";
-import Search from "../../../Components/Search/Search";
+import useGetBanners from "./Services/Queries/useGetBanners";
+import useDeleteBanners from "./Services/Mutations/useDeleteBanner";
 
 interface DataType {
   key: string;
@@ -21,19 +18,17 @@ interface DataType {
   image: string | any;
 }
 
-const CategoryTable: React.FC = () => {
-  const { data: CatData } = useGetCategories();
+const BannersTable: React.FC = () => {
+  const { data: CatData } = useGetBanners();
   const [dataSource, setDataSource] = React.useState<DataType[]>([]);
-  const { mutate, isLoading } = useDeleteCategory();
+  const { mutate, isLoading } = useDeleteBanners();
   const [active, _] = useState(false);
-  const [value, setValue] = useState("");
-  const search = useDebounce(value);
-  const { data } = useSearchCategory(search);
+  console.log(CatData);
 
   const handleDelete = (id: number) => {
     mutate(id, {
       onSuccess: () => {
-        clientQuery.invalidateQueries(["category"]);
+        clientQuery.invalidateQueries(["banners"]);
       },
       onError: (err: any) => {
         console.log(err);
@@ -43,11 +38,11 @@ const CategoryTable: React.FC = () => {
 
   React.useEffect(() => {
     if (CatData) {
-      const newData: DataType[] = CatData.results?.map((category, index) => ({
+      const newData: DataType[] = CatData.results?.map((product, index) => ({
         key: index.toString(),
-        title: category.title,
-        id: category.id,
-        image: category.image,
+        title: product.title,
+        id: product.id,
+        image: product.image,
       }));
       setDataSource(newData);
     }
@@ -56,11 +51,11 @@ const CategoryTable: React.FC = () => {
   const navigate = useNavigate();
 
   const handleCreate = () => {
-    navigate("/app/create-category");
+    navigate("/app/create-banner");
   };
 
   const handleEdit = (id: number) => {
-    navigate(`/app/edit-category/${id}`);
+    navigate(`/app/edit-product/${id}`);
   };
 
   const columns: TableProps<DataType>["columns"] = [
@@ -82,7 +77,7 @@ const CategoryTable: React.FC = () => {
     },
 
     {
-      title: "Category name",
+      title: "Banner name",
       dataIndex: "title",
       key: "title",
     },
@@ -100,7 +95,7 @@ const CategoryTable: React.FC = () => {
             Edit
           </Button>
           <Popconfirm
-            title="Are you sure to delete this category?"
+            title="Are you sure to delete this banner?"
             onConfirm={() => handleDelete(record.id)}
             okText="Yes"
             cancelText="No"
@@ -136,13 +131,12 @@ const CategoryTable: React.FC = () => {
           style={{ width: "200px" }}
         >
           <FolderAddOutlined />
-          Create Category
+          Create Banner
         </Button>
-        <Search data={data} value={value} setValue={setValue} />
       </div>
       <Table columns={columns} dataSource={dataSource} />
     </div>
   );
 };
 
-export default CategoryTable;
+export default BannersTable;

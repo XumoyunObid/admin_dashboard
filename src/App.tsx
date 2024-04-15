@@ -12,7 +12,12 @@ import EditBrand from "./Pages/Brands/Components/EditBrand";
 import SubCategoryTab from "./Pages/Sub-Category/SubCategoryTab";
 import AttributeTable from "./Pages/Attributes/AttributeTable";
 import EditSubAndAttrTab from "./Pages/Sub-Category/Components/EditSubAndAttrTab";
-import Attribute from './Pages/Attributes/Components/Attribute';
+import Attribute from "./Pages/Attributes/Components/Attribute";
+import ProductsTable from "./Pages/Products/ProductsTable";
+import CreateProduct from "./Pages/Products/Components/CreateProduct";
+import EditProduct from "./Pages/Products/Components/EditProduct";
+import BannersTable from "./Pages/Banners/BannersTable";
+import CreateBanner from "./Pages/Banners/Components/CreateBanner";
 
 function App() {
   return (
@@ -32,6 +37,11 @@ function App() {
           <Route path="create-brand" element={<CreateBrand />} />
           <Route path="attributes" element={<AttributeTable />} />
           <Route path="attribute/:id" element={<Attribute />} />
+          <Route path="products" element={<ProductsTable />} />
+          <Route path="create-product" element={<CreateProduct />} />
+          <Route path="edit-product/:id" element={<EditProduct />} />
+          <Route path="banners" element={<BannersTable />} />
+          <Route path="create-banner" element={<CreateBanner />} />
         </Route>
       </Routes>
     </>

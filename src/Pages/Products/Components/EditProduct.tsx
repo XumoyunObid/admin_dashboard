@@ -9,45 +9,54 @@ import {
   Upload,
   Spin,
   Image,
+  Switch,
 } from "antd";
-import useEditSubCategory from "../Service/Mutations/useEditSubCategory";
-import useGetSingleSubCategories from "../Service/Queries/useGetSingleSub";
+import useEditProduct from "../Service/Mutations/useEditProduct";
+import useGetSingleProduct from "../Service/Queries/useGetSingleProduct";
+import { clientQuery } from "../../../Config/query-client";
 
 type FieldType = {
   title: string;
+  price: string;
   image?: any;
+  is_new: boolean;
+  is_available: boolean;
 };
-const EditSubCategory = ({ setParentID, setAttributes }: any) => {
+const EditProduct = () => {
   const navigate = useNavigate();
-  const { data, isLoading: isloading } = useGetSingleSubCategories();
-  const { mutate, isLoading } = useEditSubCategory();
+  const { data, isLoading: isloading } = useGetSingleProduct();
+  const { mutate, isLoading } = useEditProduct();
+  console.log(isloading);
 
-  setParentID(() => data?.id);
-  setAttributes(() => data?.attributes);
-
-  const initialValue = {
+  const initialValue: FieldType = {
     title: data?.title || "",
+    price: data?.price || "",
     image: data?.image || undefined,
+    is_new: data?.is_new || false,
+    is_available: data?.is_available || false,
   };
 
   const onFinish = (values: FieldType) => {
     try {
       const formData = new FormData();
       formData.append("title", values.title);
+      formData.append("price", values.price);
       if (values.image && typeof values.image !== "string")
         formData.append("image", values.image.file);
+      formData.append("is_new", values.is_new.toString());
+      formData.append("is_available", values.is_available.toString());
 
       mutate(formData, {
-        onSuccess: () => {
-          message.success("Sub category edited successfully.");
-          setTimeout(() => {
-            navigate("/app/sub-category");
-          }, 1000);
+        onSuccess: (res) => {
+          console.log(res);
+          message.success("Product edited successfully.");
+          navigate("/app/products");
+          clientQuery.invalidateQueries("products");
         },
       });
     } catch (error) {
-      console.error("Error creating sub category:", error);
-      message.error("Failed to create category. Please try again later.");
+      console.error("Error editing product", error);
+      message.error("Failed to edit roduct. Please try again later.");
     }
   };
 
@@ -57,16 +66,16 @@ const EditSubCategory = ({ setParentID, setAttributes }: any) => {
     console.log("Failed:", errorInfo);
   };
 
+  const onChange = (checked: boolean, fieldName: string) => {
+    console.log(`Switch ${fieldName} changed to ${checked}`);
+  };
+
   return (
     <div>
-      {isloading ? (
-        <Spin />
-      ) : (
+      {!isloading ? (
         <Form
           name="basic"
-          initialValues={{
-            title: data?.title,
-          }}
+          initialValues={initialValue}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
           autoComplete="off"
@@ -76,12 +85,34 @@ const EditSubCategory = ({ setParentID, setAttributes }: any) => {
           <Form.Item
             label="Title"
             name="title"
-            rules={[
-              { required: true, message: "Please input category title!" },
-            ]}
+            rules={[{ required: true, message: "Please input product title!" }]}
           >
             <Input />
           </Form.Item>
+
+          <Form.Item
+            label="Price"
+            name="price"
+            rules={[{ required: true, message: "Please input product price!" }]}
+          >
+            <Input />
+          </Form.Item>
+
+          <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+            <Form.Item label="Is new?" name="is_new" valuePropName="checked">
+              <Switch onChange={(checked) => onChange(checked, "is_new")} />
+            </Form.Item>
+
+            <Form.Item
+              label="Is available?"
+              name="is_available"
+              valuePropName="checked"
+            >
+              <Switch
+                onChange={(checked) => onChange(checked, "is_available")}
+              />
+            </Form.Item>
+          </div>
 
           <Form.Item
             name="image"
@@ -138,9 +169,11 @@ const EditSubCategory = ({ setParentID, setAttributes }: any) => {
             </Button>
           </Form.Item>
         </Form>
+      ) : (
+        <Spin />
       )}
     </div>
   );
 };
 
-export default EditSubCategory;
+export default EditProduct;

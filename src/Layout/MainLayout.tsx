@@ -7,7 +7,9 @@ import {
   HomeOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
+  ProductOutlined,
   UploadOutlined,
+  WindowsOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu, Button, theme } from "antd";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
@@ -58,11 +60,23 @@ const MainLayout: React.FC = () => {
       label: "Brands List",
       to: "/app/brands",
     },
+    // {
+    //   key: "5",
+    //   icon: <ApartmentOutlined />,
+    //   label: "Attribute List",
+    //   to: "/app/attributes",
+    // },
     {
-      key: "5",
-      icon: <ApartmentOutlined />,
-      label: "Attribute List",
-      to: "/app/attributes",
+      key: "6",
+      icon: <ProductOutlined />,
+      label: "Product List",
+      to: "/app/products",
+    },
+    {
+      key: "7",
+      icon: <WindowsOutlined />,
+      label: "Banners List",
+      to: "/app/banners",
     },
     {
       key: "6",

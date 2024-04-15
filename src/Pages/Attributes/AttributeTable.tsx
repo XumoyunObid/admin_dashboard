@@ -15,7 +15,7 @@ interface DataType {
   key: string;
   title: string;
   id: number;
-  parent: string;
+  parent: JSX.Element;
 }
 
 const AttributeTable: React.FC = () => {
@@ -37,11 +37,11 @@ const AttributeTable: React.FC = () => {
 
   React.useEffect(() => {
     if (CatData) {
-      const newData: DataType[] = CatData.results?.map((category, index) => ({
+      const newData: DataType[] = CatData.results?.map((attribute, index) => ({
         key: index.toString(),
-        title: category.title,
-        id: category.id,
-        parent: <strong>{category?.category_title[0]?.title}</strong>,
+        title: attribute.title,
+        id: attribute.id,
+        parent: <strong>{attribute?.category_title[0]?.title}</strong>,
       }));
       setDataSource(newData);
     }
@@ -89,7 +89,7 @@ const AttributeTable: React.FC = () => {
             Edit
           </Button>
           <Popconfirm
-            title="Are you sure to delete this category?"
+            title="Are you sure to delete this attribute?"
             onConfirm={() => handleDelete(record.id)}
             okText="Yes"
             cancelText="No"
