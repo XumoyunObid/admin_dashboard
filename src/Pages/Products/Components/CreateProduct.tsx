@@ -49,10 +49,12 @@ const CreateProduct: React.FC = () => {
       formData.append("category", selectedParent || "");
 
       mutate(formData, {
-        onSuccess: (res) => console.log(res),
+        onSuccess: (res) => {
+          console.log(res);
+          message.success("Product created successfully.");
+          navigate("/app/products");
+        },
       });
-      message.success("Product created successfully.");
-      navigate("/app/products");
     } catch (error) {
       console.error("Error creating product:", error);
       message.error("Failed to create product. Please try again later.");

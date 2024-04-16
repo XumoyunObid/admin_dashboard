@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import {
-  ApartmentOutlined,
+  // ApartmentOutlined,
   AppstoreOutlined,
   FolderOpenOutlined,
   FolderOutlined,
@@ -27,12 +27,12 @@ const MainLayout: React.FC = () => {
   } = theme.useToken();
 
   if (!token) {
-    navigate("/login");
+    navigate("/");
   }
 
   const handleLogout = () => {
     Cookies.remove("token");
-    navigate("/login");
+    navigate("/");
   };
 
   const menuItems = [
@@ -93,7 +93,7 @@ const MainLayout: React.FC = () => {
           Logout
         </button>
       ),
-      to: "/login",
+      to: "/",
     },
   ];
 

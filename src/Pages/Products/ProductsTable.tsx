@@ -30,6 +30,7 @@ const ProductsTable: React.FC = () => {
   const [value, setValue] = useState("");
   const search = useDebounce(value);
   const { data } = useSearchProduct(search);
+  
 
   const handleDelete = (id: number) => {
     mutate(id, {

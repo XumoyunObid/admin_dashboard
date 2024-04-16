@@ -4,7 +4,10 @@ import { Button, Card, Form, Input, Space } from "antd";
 import useCreateAttribute from "../Service/Mutation/useCreateAttribute";
 import { useNavigate } from "react-router-dom";
 
-const CreateAttribute: React.FC = ({ parentID }: any) => {
+interface CreateAttributeProps {
+  parentID: string | undefined;
+}
+const CreateAttribute: React.FC<CreateAttributeProps> = ({ parentID }: any) => {
   const [form] = Form.useForm();
   const { mutate } = useCreateAttribute();
   const navigate = useNavigate();

@@ -1,4 +1,3 @@
-import Home from "./Pages/Home/Home";
 import Login from "./Pages/Login/Login";
 import MainLayout from "./Layout/MainLayout";
 import Category from "./Pages/Category/Category";
@@ -18,14 +17,14 @@ import CreateProduct from "./Pages/Products/Components/CreateProduct";
 import EditProduct from "./Pages/Products/Components/EditProduct";
 import BannersTable from "./Pages/Banners/BannersTable";
 import CreateBanner from "./Pages/Banners/Components/CreateBanner";
+import EditBanner from "./Pages/Banners/Components/EditBanner";
 
 function App() {
   return (
     <>
       <Routes>
-        <Route path="/login" element={<Login />} />
+        <Route index element={<Login />} />
         <Route path="/app" element={<MainLayout />}>
-          <Route index element={<Home />} />
           <Route path="category" element={<Category />} />
           <Route path="create-category" element={<CreateCategory />} />
           <Route path="sub-category" element={<SubCategory />} />
@@ -42,6 +41,7 @@ function App() {
           <Route path="edit-product/:id" element={<EditProduct />} />
           <Route path="banners" element={<BannersTable />} />
           <Route path="create-banner" element={<CreateBanner />} />
+          <Route path="edit-banner/:id" element={<EditBanner />} />
         </Route>
       </Routes>
     </>

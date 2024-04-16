@@ -5,8 +5,8 @@ import EditSubCategory from "./EditSubCategory";
 import EditAttribute from "../../Attributes/Components/EditAttribute";
 
 const EditSubAndAttrTab: React.FC = () => {
-  const [parentID, setParentID] = useState();
-  const [attribute, setAttributes] = useState();
+  const [parentID, setParentID] = useState<string | undefined>();
+  const [attribute, setAttributes] = useState<string | undefined>();
 
   const items: TabsProps["items"] = [
     {

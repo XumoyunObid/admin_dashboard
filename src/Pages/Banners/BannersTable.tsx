@@ -19,11 +19,10 @@ interface DataType {
 }
 
 const BannersTable: React.FC = () => {
-  const { data: CatData } = useGetBanners();
+  const { data: CatData, isLoading: isloading } = useGetBanners();
   const [dataSource, setDataSource] = React.useState<DataType[]>([]);
-  const { mutate, isLoading } = useDeleteBanners();
+  const { mutate } = useDeleteBanners();
   const [active, _] = useState(false);
-  console.log(CatData);
 
   const handleDelete = (id: number) => {
     mutate(id, {
@@ -55,7 +54,7 @@ const BannersTable: React.FC = () => {
   };
 
   const handleEdit = (id: number) => {
-    navigate(`/app/edit-product/${id}`);
+    navigate(`/app/edit-banner/${id}`);
   };
 
   const columns: TableProps<DataType>["columns"] = [
@@ -69,10 +68,22 @@ const BannersTable: React.FC = () => {
       dataIndex: "image",
       key: "image",
       render: (image: string | undefined) =>
-        isLoading ? (
+        isloading ? (
           <Skeleton.Image active={active} />
         ) : (
-          <Image width={80} src={image} alt="" />
+          <div
+            style={{
+              width: "120px",
+              height: "120px",
+              border: "1px solid black",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "white",
+            }}
+          >
+            <Image width={120} src={image} alt="" />
+          </div>
         ),
     },
 
@@ -82,7 +93,7 @@ const BannersTable: React.FC = () => {
       key: "title",
     },
     {
-      title: "Change",
+      title: "Edit/Delete",
       key: "change",
       render: (_, record) => (
         <Space size="middle">

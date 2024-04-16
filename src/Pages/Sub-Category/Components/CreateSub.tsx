@@ -19,7 +19,15 @@ type FieldType = {
   image?: any;
 };
 
-const CreateSub: React.FC = ({ setActiveKey, setParentID }: any) => {
+interface CreateSubProps {
+  setActiveKey: React.Dispatch<React.SetStateAction<number>>;
+  setParentID: React.Dispatch<React.SetStateAction<undefined>>;
+}
+
+const CreateSub: React.FC<CreateSubProps> = ({
+  setActiveKey,
+  setParentID,
+}: any) => {
   const { mutate, isLoading } = useCreateCategory();
   const parents = useGetCategories();
 
@@ -40,8 +48,7 @@ const CreateSub: React.FC = ({ setActiveKey, setParentID }: any) => {
       formData.append("parent", selectedParent || "");
 
       mutate(formData, {
-        onSuccess: (res) => setParentID(() => res?.data?.id
-        ),
+        onSuccess: (res) => setParentID(() => res?.data?.id),
       });
       setActiveKey(2);
       message.success("Sub category created successfully.");

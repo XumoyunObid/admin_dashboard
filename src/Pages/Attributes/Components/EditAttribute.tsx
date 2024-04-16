@@ -17,7 +17,15 @@ interface AttrType {
   category_id: string;
 }
 
-const EditAttribute: React.FC = ({ parentID, attribute }: any) => {
+interface EditAttributeProps {
+  parentID: string | undefined;
+  attribute: string | undefined;
+}
+
+const EditAttribute: React.FC<EditAttributeProps> = ({
+  parentID,
+  attribute,
+}: any) => {
   const [form] = Form.useForm();
   const { mutate } = useEditAttribute();
   // const {mutate:DelValue} = useDeleteAttributeValue()

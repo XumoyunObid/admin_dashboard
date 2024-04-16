@@ -1,4 +1,3 @@
-import { useNavigate, useParams } from "react-router-dom";
 import { InboxOutlined, LoadingOutlined } from "@ant-design/icons";
 import {
   Button,
@@ -9,55 +8,53 @@ import {
   Upload,
   Spin,
   Image,
-  Switch,
 } from "antd";
-import useEditProduct from "../Service/Mutations/useEditProduct";
-import useGetProducts from "../Service/Queries/useGetProducts";
-import { clientQuery } from "../../../Config/query-client";
+import { useNavigate, useParams } from "react-router-dom";
+import useEditBanner from "../Services/Mutations/useEditBanner";
+import useGetBanners from "../Services/Queries/useGetBanners";
+import ReactQuill from "react-quill";
+import { useState } from "react";
 
 type FieldType = {
   title: string;
-  price: string;
+  description: string;
   image?: any;
-  is_new: boolean;
-  is_available: boolean;
 };
-const EditProduct = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const { data, isLoading: isloading } = useGetProducts();
-  const product = data?.results.find((item) => item.id == Number(id));
-  const { mutate, isLoading } = useEditProduct();
 
-  const initialValue: FieldType = {
+const EditBanner = () => {
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const { data, isLoading: isloading } = useGetBanners();
+  const { mutate, isLoading } = useEditBanner();
+  const product = data?.results.find((item) => item.id == Number(id));
+
+  const [value, setValue] = useState<string>("");
+
+  const initialValues = {
     title: product?.title || "",
-    price: product?.price || "",
+    description: product?.description || "",
     image: product?.image || undefined,
-    is_new: product?.is_new || false,
-    is_available: product?.is_available || false,
   };
 
-  const onFinish = (values: FieldType) => {
+  const onFinish = async (values: FieldType) => {
     try {
       const formData = new FormData();
       formData.append("title", values.title);
-      formData.append("price", values.price);
+      formData.append("description", values.description);
+
       if (values.image && typeof values.image !== "string")
         formData.append("image", values.image.file);
-      formData.append("is_new", values.is_new.toString());
-      formData.append("is_available", values.is_available.toString());
+      formData.append("parent", "");
 
-      mutate(formData, {
-        onSuccess: (res) => {
-          console.log(res);
-          message.success("Product edited successfully.");
-          navigate("/app/products");
-          clientQuery.invalidateQueries("products");
+      await mutate(formData, {
+        onSuccess: () => {
+          message.success("Banner edited successfully.");
+          navigate("/app/banners");
         },
       });
     } catch (error) {
-      console.error("Error editing product", error);
-      message.error("Failed to edit roduct. Please try again later.");
+      console.error("Error creating banner:", error);
+      message.error("Failed to create banner. Please try again later.");
     }
   };
 
@@ -67,59 +64,54 @@ const EditProduct = () => {
     console.log("Failed:", errorInfo);
   };
 
-  const onChange = (checked: boolean, fieldName: string) => {
-    console.log(`Switch ${fieldName} changed to ${checked}`);
+  const handleEditorChange = (content: string) => {
+    setValue(content);
   };
 
   return (
     <div>
-      {!isloading ? (
+      {isloading ? (
+        <Spin />
+      ) : (
         <Form
           name="basic"
-          initialValues={initialValue}
+          initialValues={initialValues}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
-          autoComplete="off"
           layout="vertical"
           style={{ width: "500px" }}
         >
           <Form.Item
             label="Title"
             name="title"
-            rules={[{ required: true, message: "Please input product title!" }]}
+            rules={[
+              { required: true, message: "Please input category title!" },
+            ]}
           >
             <Input />
           </Form.Item>
 
           <Form.Item
-            label="Price"
-            name="price"
-            rules={[{ required: true, message: "Please input product price!" }]}
+            label="Description"
+            name="description"
+            rules={[
+              { required: true, message: "Please input banner description!" },
+            ]}
           >
-            <Input />
+            <ReactQuill
+              placeholder="Product description"
+              value={value}
+              theme="snow"
+              onChange={handleEditorChange}
+              style={{ height: "220px", marginBottom: "50px" }}
+            />
           </Form.Item>
-
-          <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-            <Form.Item label="Is new?" name="is_new" valuePropName="checked">
-              <Switch onChange={(checked) => onChange(checked, "is_new")} />
-            </Form.Item>
-
-            <Form.Item
-              label="Is available?"
-              name="is_available"
-              valuePropName="checked"
-            >
-              <Switch
-                onChange={(checked) => onChange(checked, "is_available")}
-              />
-            </Form.Item>
-          </div>
 
           <Form.Item
             name="image"
             rules={[
               {
-                required: initialValue ? false : true,
+                required: initialValues ? false : true,
                 message: "Please upload category image!",
               },
             ]}
@@ -154,7 +146,12 @@ const EditProduct = () => {
           )}
 
           <Form.Item>
-            <Button type="primary" size="large" htmlType="submit">
+            <Button
+              type="primary"
+              size="large"
+              style={{ width: "100px" }}
+              htmlType="submit"
+            >
               {isLoading ? (
                 <Spin
                   indicator={
@@ -165,16 +162,14 @@ const EditProduct = () => {
                   }
                 />
               ) : (
-                "Submit"
+                "Edit"
               )}
             </Button>
           </Form.Item>
         </Form>
-      ) : (
-        <Spin />
       )}
     </div>
   );
 };
 
-export default EditProduct;
+export default EditBanner;

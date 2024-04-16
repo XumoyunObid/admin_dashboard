@@ -31,7 +31,7 @@ interface SubCategoryType {
 const useGetSingleSubCategories = () => {
   const { id } = useParams();
   return useQuery({
-    queryKey: ["sub-category"],
+    queryKey: ["sub-category", id],
     queryFn: () => {
       return request
         .get<SubCategoryType>(`/category/${id}/`)
