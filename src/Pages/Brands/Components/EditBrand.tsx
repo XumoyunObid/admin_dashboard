@@ -12,6 +12,7 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import useEditBrand from "../Service/Mutation/useEditBrand";
 import useGetBrands from "../Service/Queries/useGetBrands";
+import { useState } from "react";
 
 type FieldType = {
   title: string;
@@ -21,7 +22,8 @@ type FieldType = {
 const EditBrand = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { data } = useGetBrands();
+  const [page] = useState(1);
+  const { data } = useGetBrands(page);
   const { mutate, isLoading } = useEditBrand();
   const product = data?.results.find((item) => item.id == Number(id));
   console.log(product);

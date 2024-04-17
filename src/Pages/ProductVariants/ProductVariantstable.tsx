@@ -25,7 +25,8 @@ const ProductVarinatsTable: React.FC = () => {
   const { data: CatData } = useGetProductVariants();
   const [dataSource, setDataSource] = React.useState<DataType[]>([]);
   const { mutate } = useDeleteProduct();
-
+  console.log(CatData);
+  
   // const [value, setValue] = useState("");
   // const search = useDebounce(value);
   // const { data } = useSearchProduct(search);

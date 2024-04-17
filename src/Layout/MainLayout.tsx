@@ -40,7 +40,7 @@ const MainLayout: React.FC = () => {
       key: "1",
       icon: <HomeOutlined />,
       label: "Home",
-      to: "/app",
+      to: "/app/home",
     },
     {
       key: "2",

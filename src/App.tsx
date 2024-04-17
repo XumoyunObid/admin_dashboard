@@ -19,6 +19,7 @@ import BannersTable from "./Pages/Banners/BannersTable";
 import CreateBanner from "./Pages/Banners/Components/CreateBanner";
 import EditBanner from "./Pages/Banners/Components/EditBanner";
 import ProductVarinatsTable from "./Pages/ProductVariants/ProductVariantstable";
+import Home from "./Pages/Home/Home";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
       <Routes>
         <Route index element={<Login />} />
         <Route path="/app" element={<MainLayout />}>
+          <Route path="home" element={<Home />} />
           <Route path="category" element={<Category />} />
           <Route path="create-category" element={<CreateCategory />} />
           <Route path="sub-category" element={<SubCategory />} />

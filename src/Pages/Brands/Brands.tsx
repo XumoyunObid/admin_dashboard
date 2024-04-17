@@ -83,7 +83,7 @@ const Brands: React.FC = () => {
       key: "title",
     },
     {
-      title: "Change",
+      title: "Edit/Delete",
       key: "change",
       render: (_, record) => (
         <Space size="middle">

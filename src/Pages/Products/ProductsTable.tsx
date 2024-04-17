@@ -32,6 +32,8 @@ const ProductsTable: React.FC = () => {
   const [value, setValue] = useState("");
   const search = useDebounce(value);
   const { data } = useSearchProduct(search);
+  console.log(CatData);
+  
 
   const handleDelete = (id: number) => {
     mutate(id, {
@@ -101,7 +103,7 @@ const ProductsTable: React.FC = () => {
       render: (price) => `$${price}`,
     },
     {
-      title: "Change",
+      title: "Edit/Delete",
       key: "change",
       render: (_, record) => (
         <Space size="middle">

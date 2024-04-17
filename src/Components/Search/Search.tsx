@@ -25,7 +25,7 @@ const Search: React.FC<SearchProps> = ({ data, value, setValue }) => {
           padding: "10px",
           position: "relative",
           border: "2px solid #1677ff",
-          borderRadius: "8px",
+          borderRadius: "0px",
         }}
         type="text"
         placeholder="Search"
@@ -34,17 +34,18 @@ const Search: React.FC<SearchProps> = ({ data, value, setValue }) => {
       {value.length > 2 && (
         <ul
           style={{
-            top: 158,
-            border: "2px solid #1677ff",
+            top: 157,
+            border: "2px solid #1677ff ",
             padding: "15px",
-            backgroundColor: "white",
             zIndex: 10,
             position: "absolute",
             width: "550px",
             listStyle: "none",
             borderTop: "none",
-            borderRadius: "8px",
-            outlineColor: "#1677ff",
+            borderBottomLeftRadius: "8px",
+            borderBottomRightRadius: "8px",
+            backgroundColor: "rgba(255, 255, 255, 0.5)",
+            backdropFilter: "blur(5px)",
           }}
         >
           {data?.results?.map((item) => (

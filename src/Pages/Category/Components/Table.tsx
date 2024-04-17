@@ -83,7 +83,7 @@ const CategoryTable: React.FC = () => {
       key: "title",
     },
     {
-      title: "Change",
+      title: "Edit/Delete",
       key: "change",
       render: (_: any, record: { id: number }) => (
         <Space size="middle">

@@ -12,6 +12,7 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import useEditCategory from "../Service/Mutation/useEditCategory";
 import useGetCategories from "../Service/Queries/useGetCategory";
+import { useState } from "react";
 
 type FieldType = {
   title: string;
@@ -21,7 +22,8 @@ type FieldType = {
 const EditCategory = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { data } = useGetCategories();
+  const [page] = useState(1);
+  const { data } = useGetCategories(page);
   const { mutate, isLoading } = useEditCategory();
   const product = data?.results.find((item) => item.id == Number(id));
 
