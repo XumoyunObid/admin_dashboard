@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 interface CreateAttributeProps {
   parentID: string | undefined;
 }
-const CreateAttribute: React.FC<CreateAttributeProps> = ({ parentID }: any) => {
+const CreateAttribute: React.FC<CreateAttributeProps> = ({ parentID }) => {
   const [form] = Form.useForm();
   const { mutate } = useCreateAttribute();
   const navigate = useNavigate();
@@ -68,8 +68,6 @@ const CreateAttribute: React.FC<CreateAttributeProps> = ({ parentID }: any) => {
                 <Form.Item label="Attribute" name={[field.name, "title"]}>
                   <Input />
                 </Form.Item>
-
-                {/* Nest Form.List */}
                 <Form.Item label="value">
                   <Form.List name={[field.name, "values"]}>
                     {(subFields, subOpt) => (

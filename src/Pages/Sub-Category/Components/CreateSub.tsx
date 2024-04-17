@@ -29,7 +29,8 @@ const CreateSub: React.FC<CreateSubProps> = ({
   setParentID,
 }: any) => {
   const { mutate, isLoading } = useCreateCategory();
-  const parents = useGetCategories();
+  const [page] = useState(1);
+  const parents = useGetCategories(page);
 
   const parentOptions = parents?.data?.results.map((item) => ({
     value: item.id,

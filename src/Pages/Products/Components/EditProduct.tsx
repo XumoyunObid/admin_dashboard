@@ -14,6 +14,7 @@ import {
 import useEditProduct from "../Service/Mutations/useEditProduct";
 import useGetProducts from "../Service/Queries/useGetProducts";
 import { clientQuery } from "../../../Config/query-client";
+import { useState } from "react";
 
 type FieldType = {
   title: string;
@@ -25,7 +26,8 @@ type FieldType = {
 const EditProduct = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data, isLoading: isloading } = useGetProducts();
+  const [page] = useState(1);
+  const { data, isLoading: isloading } = useGetProducts(page);
   const product = data?.results.find((item) => item.id == Number(id));
   const { mutate, isLoading } = useEditProduct();
 

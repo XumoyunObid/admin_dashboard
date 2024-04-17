@@ -17,12 +17,17 @@ interface SubCategoryType {
   }>;
 }
 
-const useGetSubCategories = () => {
+const useGetSubCategories = (page: number) => {
   return useQuery({
-    queryKey: ["sub-category"],
+    queryKey: ["sub-category", page],
     queryFn: () => {
       return request
-        .get<SubCategoryType>("/api/subcategory/")
+        .get<SubCategoryType>("/api/subcategory/", {
+          params: {
+            limit: 20,
+            offset: (page - 1) * 20,
+          },
+        })
         .then((res) => res.data);
     },
   });

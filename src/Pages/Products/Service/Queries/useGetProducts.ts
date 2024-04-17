@@ -16,11 +16,18 @@ interface ProductsType {
   }>;
 }
 
-const useGetProducts = () => {
+const useGetProducts = (page: number) => {
   return useQuery({
     queryKey: ["products"],
     queryFn: () => {
-      return request.get<ProductsType>("/product/").then((res) => res.data);
+      return request
+        .get<ProductsType>("/product/", {
+          params: {
+            limit: 20,
+            offset: (page - 1) * 20,
+          },
+        })
+        .then((res) => res.data);
     },
   });
 };

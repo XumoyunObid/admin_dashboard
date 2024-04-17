@@ -15,11 +15,18 @@ interface BannersType {
   }>;
 }
 
-const useGetBanners = () => {
+const useGetBanners = (page: number) => {
   return useQuery({
     queryKey: ["banners"],
     queryFn: () => {
-      return request.get<BannersType>("/banner/").then((res) => res.data);
+      return request
+        .get<BannersType>("/banner/", {
+          params: {
+            limit: 20,
+            offset: (page - 1) * 20,
+          },
+        })
+        .then((res) => res.data);
     },
   });
 };

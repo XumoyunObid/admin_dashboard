@@ -17,11 +17,18 @@ interface BrandsType {
   }>;
 }
 
-const useGetBrands = () => {
+const useGetBrands = (page: number) => {
   return useQuery({
     queryKey: ["brands"],
     queryFn: () => {
-      return request.get<BrandsType>("/brand/").then((res) => res.data);
+      return request
+        .get<BrandsType>("/brand/", {
+          params: {
+            limit: 20,
+            offset: (page - 1) * 20,
+          },
+        })
+        .then((res) => res.data);
     },
   });
 };

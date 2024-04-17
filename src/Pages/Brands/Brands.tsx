@@ -19,7 +19,8 @@ interface DataType {
 }
 
 const Brands: React.FC = () => {
-  const { data: CatData } = useGetBrands();
+  const [page, setPage] = useState(1);
+  const { data: CatData } = useGetBrands(page);
   const [dataSource, setDataSource] = React.useState<DataType[]>([]);
   const navigate = useNavigate();
   const { mutate, isLoading } = useDeleteBrand();
@@ -47,7 +48,7 @@ const Brands: React.FC = () => {
       }));
       setDataSource(newData);
     }
-  }, [CatData]); 
+  }, [CatData]);
 
   const handleCreate = () => {
     navigate("/app/create-brand");
@@ -126,7 +127,16 @@ const Brands: React.FC = () => {
         <FolderAddOutlined />
         Create Brand
       </Button>
-      <Table columns={columns} dataSource={dataSource} />
+      <Table
+        columns={columns}
+        dataSource={dataSource}
+        pagination={{
+          total: CatData?.count || 0,
+          current: page,
+          pageSize: 20,
+          onChange: (pageNum) => setPage(pageNum),
+        }}
+      />
     </div>
   );
 };

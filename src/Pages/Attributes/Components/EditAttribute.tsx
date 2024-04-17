@@ -28,8 +28,9 @@ const EditAttribute: React.FC<EditAttributeProps> = ({
 }: any) => {
   const [form] = Form.useForm();
   const { mutate } = useEditAttribute();
-  // const {mutate:DelValue} = useDeleteAttributeValue()
+  // const { mutate: DelValue } = useDeleteAttributeValue();
   const navigate = useNavigate();
+  console.log(attribute);
 
   const initialValue = {
     attr_list: attribute?.map((attr: { title: any; values: any[] }) => ({
@@ -44,12 +45,12 @@ const EditAttribute: React.FC<EditAttributeProps> = ({
         return {
           attributes: [
             {
-              attribute_id: attribute[0]?.id ?? null,
+              attribute_id: attribute[0]?.id || null,
               title: i.title,
               values: i.values?.map((item: any, index: number) => {
                 return {
                   value: item.first,
-                  value_id: attribute[0]?.values[index]?.id ?? null,
+                  value_id: attribute[0]?.values[index]?.id || null,
                 };
               }),
             },
@@ -70,9 +71,7 @@ const EditAttribute: React.FC<EditAttributeProps> = ({
     }
   };
 
-  // const handleDeleteValue =()=> {
-
-  // }
+  // const handleDeleteValue = () => {};
 
   return (
     <Form

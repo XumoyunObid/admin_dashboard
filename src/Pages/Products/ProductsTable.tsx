@@ -7,6 +7,7 @@ import {
   DeleteOutlined,
   EditOutlined,
   FolderAddOutlined,
+  UnorderedListOutlined,
 } from "@ant-design/icons";
 import useGetProducts from "./Service/Queries/useGetProducts";
 import useDeleteProduct from "./Service/Mutations/useDeleteProduct";
@@ -23,14 +24,14 @@ interface DataType {
 }
 
 const ProductsTable: React.FC = () => {
-  const { data: CatData } = useGetProducts();
+  const [page, setPage] = useState(1);
+  const { data: CatData } = useGetProducts(page);
   const [dataSource, setDataSource] = React.useState<DataType[]>([]);
   const { mutate, isLoading } = useDeleteProduct();
   const [active, _] = useState(false);
   const [value, setValue] = useState("");
   const search = useDebounce(value);
   const { data } = useSearchProduct(search);
-  
 
   const handleDelete = (id: number) => {
     mutate(id, {
@@ -64,6 +65,10 @@ const ProductsTable: React.FC = () => {
 
   const handleEdit = (id: number) => {
     navigate(`/app/edit-product/${id}`);
+  };
+
+  const handleVariant = () => {
+    navigate("/app/product-variants");
   };
 
   const columns: TableProps<DataType>["columns"] = [
@@ -108,6 +113,13 @@ const ProductsTable: React.FC = () => {
           >
             Edit
           </Button>
+          <Button
+            size="large"
+            icon={<UnorderedListOutlined />}
+            onClick={handleVariant}
+          >
+            Variants
+          </Button>
           <Popconfirm
             title="Are you sure to delete this product?"
             onConfirm={() => handleDelete(record.id)}
@@ -149,7 +161,16 @@ const ProductsTable: React.FC = () => {
         </Button>
         <Search data={data} value={value} setValue={setValue} />
       </div>
-      <Table columns={columns} dataSource={dataSource} />
+      <Table
+        columns={columns}
+        dataSource={dataSource}
+        pagination={{
+          total: CatData?.count || 0,
+          current: page,
+          pageSize: 20,
+          onChange: (pageNum) => setPage(pageNum),
+        }}
+      />
     </div>
   );
 };

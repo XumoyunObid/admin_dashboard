@@ -19,7 +19,8 @@ interface DataType {
 }
 
 const BannersTable: React.FC = () => {
-  const { data: CatData, isLoading: isloading } = useGetBanners();
+  const [page, setPage] = useState(1);
+  const { data: CatData, isLoading: isloading } = useGetBanners(page);
   const [dataSource, setDataSource] = React.useState<DataType[]>([]);
   const { mutate } = useDeleteBanners();
   const [active, _] = useState(false);
@@ -74,7 +75,7 @@ const BannersTable: React.FC = () => {
           <div
             style={{
               width: "120px",
-              height: "120px",
+              height: "55px",
               border: "1px solid black",
               display: "flex",
               alignItems: "center",
@@ -82,7 +83,12 @@ const BannersTable: React.FC = () => {
               backgroundColor: "white",
             }}
           >
-            <Image width={120} src={image} alt="" />
+            <Image
+              width={120}
+              style={{ objectFit: "cover", height: "50px" }}
+              src={image}
+              alt=""
+            />
           </div>
         ),
     },
@@ -145,7 +151,16 @@ const BannersTable: React.FC = () => {
           Create Banner
         </Button>
       </div>
-      <Table columns={columns} dataSource={dataSource} />
+      <Table
+        columns={columns}
+        dataSource={dataSource}
+        pagination={{
+          total: CatData?.count || 0,
+          current: page,
+          pageSize: 20,
+          onChange: (pageNum) => setPage(pageNum),
+        }}
+      />
     </div>
   );
 };

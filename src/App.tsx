@@ -18,6 +18,7 @@ import EditProduct from "./Pages/Products/Components/EditProduct";
 import BannersTable from "./Pages/Banners/BannersTable";
 import CreateBanner from "./Pages/Banners/Components/CreateBanner";
 import EditBanner from "./Pages/Banners/Components/EditBanner";
+import ProductVarinatsTable from "./Pages/ProductVariants/ProductVariantstable";
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
           <Route path="banners" element={<BannersTable />} />
           <Route path="create-banner" element={<CreateBanner />} />
           <Route path="edit-banner/:id" element={<EditBanner />} />
+          <Route path="product-variants" element={<ProductVarinatsTable />} />
         </Route>
       </Routes>
     </>

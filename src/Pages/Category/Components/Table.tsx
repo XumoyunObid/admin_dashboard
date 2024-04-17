@@ -1,15 +1,13 @@
 import React, { useState } from "react";
 import { Button, Image, Space, Table, Popconfirm, Skeleton } from "antd";
-import type { TableProps } from "antd";
-import useGetCategories from "../Service/Queries/useGetCategory";
-import { useNavigate } from "react-router-dom";
-import useDeleteCategory from "../Service/Mutation/useDeleteCategory";
-import { clientQuery } from "../../../Config/query-client";
 import {
   DeleteOutlined,
   EditOutlined,
   FolderAddOutlined,
 } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
+import useGetCategories from "../Service/Queries/useGetCategory";
+import useDeleteCategory from "../Service/Mutation/useDeleteCategory";
 import useDebounce from "../../../Hooks/useDebounce";
 import useSearchCategory from "../Service/Queries/useSearchCategory";
 import Search from "../../../Components/Search/Search";
@@ -22,18 +20,19 @@ interface DataType {
 }
 
 const CategoryTable: React.FC = () => {
-  const { data: CatData } = useGetCategories();
+  const [page, setPage] = useState(1);
+  const { data: CatData } = useGetCategories(page);
   const [dataSource, setDataSource] = React.useState<DataType[]>([]);
   const { mutate, isLoading } = useDeleteCategory();
-  const [active, _] = useState(false);
   const [value, setValue] = useState("");
   const search = useDebounce(value);
   const { data } = useSearchCategory(search);
+  const navigate = useNavigate();
 
   const handleDelete = (id: number) => {
     mutate(id, {
       onSuccess: () => {
-        clientQuery.invalidateQueries(["category"]);
+        setPage(1);
       },
       onError: (err: any) => {
         console.log(err);
@@ -53,8 +52,6 @@ const CategoryTable: React.FC = () => {
     }
   }, [CatData]);
 
-  const navigate = useNavigate();
-
   const handleCreate = () => {
     navigate("/app/create-category");
   };
@@ -63,7 +60,7 @@ const CategoryTable: React.FC = () => {
     navigate(`/app/edit-category/${id}`);
   };
 
-  const columns: TableProps<DataType>["columns"] = [
+  const columns = [
     {
       title: "ID",
       dataIndex: "id",
@@ -75,12 +72,11 @@ const CategoryTable: React.FC = () => {
       key: "image",
       render: (image: string | undefined) =>
         isLoading ? (
-          <Skeleton.Image active={active} />
+          <Skeleton.Image active />
         ) : (
           <Image width={80} src={image} alt="" />
         ),
     },
-
     {
       title: "Category name",
       dataIndex: "title",
@@ -89,7 +85,7 @@ const CategoryTable: React.FC = () => {
     {
       title: "Change",
       key: "change",
-      render: (_, record) => (
+      render: (_: any, record: { id: number }) => (
         <Space size="middle">
           <Button
             type="primary"
@@ -140,7 +136,16 @@ const CategoryTable: React.FC = () => {
         </Button>
         <Search data={data} value={value} setValue={setValue} />
       </div>
-      <Table columns={columns} dataSource={dataSource} />
+      <Table
+        columns={columns}
+        dataSource={dataSource}
+        pagination={{
+          total: CatData?.count || 0,
+          current: page,
+          pageSize: 20,
+          onChange: (pageNum) => setPage(pageNum),
+        }}
+      />
     </div>
   );
 };

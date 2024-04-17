@@ -26,7 +26,8 @@ type FieldType = {
 
 const CreateProduct: React.FC = () => {
   const { mutate, isLoading } = useCreateProduct();
-  const parents = useGetCategories();
+  const [page] = useState(1);
+  const parents = useGetCategories(page);
   const navigate = useNavigate();
 
   const parentOptions = parents?.data?.results.map((item) => ({

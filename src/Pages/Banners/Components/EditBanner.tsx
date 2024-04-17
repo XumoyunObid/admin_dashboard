@@ -24,7 +24,8 @@ type FieldType = {
 const EditBanner = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { data, isLoading: isloading } = useGetBanners();
+  const [page] = useState(1);
+  const { data, isLoading: isloading } = useGetBanners(page);
   const { mutate, isLoading } = useEditBanner();
   const product = data?.results.find((item) => item.id == Number(id));
 

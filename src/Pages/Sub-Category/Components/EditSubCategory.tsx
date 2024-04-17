@@ -21,6 +21,8 @@ const EditSubCategory = ({ setParentID, setAttributes }: any) => {
   const navigate = useNavigate();
   const { data, isLoading: isloading } = useGetSingleSubCategories();
   const { mutate, isLoading } = useEditSubCategory();
+  console.log(data);
+  
   
 
   setParentID(() => data?.id);

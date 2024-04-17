@@ -17,11 +17,18 @@ interface CategoryType {
   }>;
 }
 
-const useGetCategories = () => {
+const useGetCategories = (page: number) => {
   return useQuery({
-    queryKey: ["category"],
+    queryKey: ["category", page],
     queryFn: () => {
-      return request.get<CategoryType>("/category/").then((res) => res.data);
+      return request
+        .get<CategoryType>("/category/", {
+          params: {
+            limit: 20, // Assuming 20 items per page
+            offset: (page - 1) * 20, // Calculate the offset based on page number
+          },
+        })
+        .then((res) => res.data);
     },
   });
 };
