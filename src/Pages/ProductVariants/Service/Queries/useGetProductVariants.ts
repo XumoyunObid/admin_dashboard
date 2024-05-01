@@ -24,7 +24,7 @@ const useGetProductVariants = () => {
     queryKey: ["product-variants"],
     queryFn: () => {
       return request
-        .get<SubCategoryType>("/product_variant/")
+        .get<SubCategoryType>(`/product_variant/`)
         .then((res) => res.data);
     },
   });

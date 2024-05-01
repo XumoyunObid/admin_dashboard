@@ -20,18 +20,20 @@ import CreateBanner from "./Pages/Banners/Components/CreateBanner";
 import EditBanner from "./Pages/Banners/Components/EditBanner";
 import ProductVarinatsTable from "./Pages/ProductVariants/ProductVariantstable";
 import Home from "./Pages/Home/Home";
+import EditCatAndSub from "./Pages/Category/EditCategory/EditCatAndSub";
+import CreateProductVariant from "./Pages/ProductVariants/Components/CreateProductVariant";
 
 function App() {
   return (
     <>
       <Routes>
-        <Route index element={<Login />} />
+        <Route path="/" element={<Login />} />
         <Route path="/app" element={<MainLayout />}>
-          <Route path="home" element={<Home />} />
+          <Route index element={<Home />} />
           <Route path="category" element={<Category />} />
           <Route path="create-category" element={<CreateCategory />} />
           <Route path="sub-category" element={<SubCategory />} />
-          <Route path="edit-category/:id" element={<EditCategory />} />
+          <Route path="edit-category/:id" element={<EditCatAndSub />} />
           <Route path="brands" element={<Brands />} />
           <Route path="edit-brand/:id" element={<EditBrand />} />
           <Route path="create-subcategory" element={<SubCategoryTab />} />
@@ -45,7 +47,11 @@ function App() {
           <Route path="banners" element={<BannersTable />} />
           <Route path="create-banner" element={<CreateBanner />} />
           <Route path="edit-banner/:id" element={<EditBanner />} />
-          <Route path="product-variants" element={<ProductVarinatsTable />} />
+          <Route path="product-variants/" element={<ProductVarinatsTable />} />
+          <Route
+            path="create-product-variants/"
+            element={<CreateProductVariant />}
+          />
         </Route>
       </Routes>
     </>

@@ -1,15 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button, Image, Space, Table, Popconfirm, Skeleton } from "antd";
 import type { TableProps } from "antd";
 import { useNavigate } from "react-router-dom";
-import {
-  DeleteOutlined,
-  EditOutlined,
-  FolderAddOutlined,
-} from "@ant-design/icons";
-import { clientQuery } from "../../Config/query-client";
-import useGetSubCategories from "./Service/Queries/useGetSubCategory";
-import useDeleteSubCategory from "./Service/Mutations/useDeleteSubCategory";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import useDeleteSubCategory from "../../Sub-Category/Service/Mutations/useDeleteSubCategory";
+import { clientQuery } from "./../../../Config/query-client";
 
 interface DataType {
   key: string;
@@ -18,15 +13,19 @@ interface DataType {
   image: string | any;
 }
 
-const SubCategories: React.FC = () => {
-  const [page, setPage] = useState(1);
-  const { data: CatData } = useGetSubCategories(page);
+interface ChildType {
+  children: {
+    id: number;
+    image: string;
+    title: string;
+  }[];
+}
+
+const SubCatTable: React.FC<ChildType> = ({ children }) => {
   const [dataSource, setDataSource] = React.useState<DataType[]>([]);
   const navigate = useNavigate();
   const { mutate, isLoading } = useDeleteSubCategory();
-  const [active, _] = useState(false);
-  console.log(CatData?.results);
-  
+  const [active, _] = React.useState(false);
 
   const handleDelete = (id: number) => {
     mutate(id, {
@@ -41,8 +40,8 @@ const SubCategories: React.FC = () => {
   };
 
   React.useEffect(() => {
-    if (CatData) {
-      const newData: DataType[] = CatData.results?.map((category, index) => ({
+    if (children) {
+      const newData: DataType[] = children?.map((category, index) => ({
         key: index.toString(),
         title: category.title,
         id: category.id,
@@ -50,11 +49,7 @@ const SubCategories: React.FC = () => {
       }));
       setDataSource(newData);
     }
-  }, [CatData]);
-
-  const handleCreate = () => {
-    navigate("/app/create-subcategory");
-  };
+  }, [children]);
 
   const handleEdit = (id: number) => {
     navigate(`/app/edit-subcategory/${id}`);
@@ -77,7 +72,6 @@ const SubCategories: React.FC = () => {
           <Image width={80} src={image} alt="" />
         ),
     },
-
     {
       title: "Sub Category name",
       dataIndex: "title",
@@ -118,30 +112,9 @@ const SubCategories: React.FC = () => {
 
   return (
     <div className="category">
-      <div style={{ display: "flex", alignItems: "center", gap: "100px" }}>
-        <Button
-          className="create-btn"
-          type="primary"
-          size="large"
-          onClick={handleCreate}
-          style={{ width: "200px" }}
-        >
-          <FolderAddOutlined />
-          Create Sub Category
-        </Button>
-      </div>
-      <Table
-        columns={columns}
-        dataSource={dataSource}
-        pagination={{
-          total: CatData?.count || 0,
-          current: page,
-          pageSize: 20,
-          onChange: (pageNum) => setPage(pageNum),
-        }}
-      />
+      <Table columns={columns} dataSource={dataSource} />
     </div>
   );
 };
 
-export default SubCategories;
+export default SubCatTable;

@@ -95,6 +95,7 @@ const EditAttribute: React.FC<EditAttributeProps> = ({
                 extra={
                   <MinusCircleOutlined
                     onClick={() => {
+                      
                       remove(field.name);
                     }}
                   />

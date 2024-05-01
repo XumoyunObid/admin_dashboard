@@ -26,7 +26,7 @@ const ProductVarinatsTable: React.FC = () => {
   const [dataSource, setDataSource] = React.useState<DataType[]>([]);
   const { mutate } = useDeleteProduct();
   console.log(CatData);
-  
+
   // const [value, setValue] = useState("");
   // const search = useDebounce(value);
   // const { data } = useSearchProduct(search);
@@ -57,7 +57,7 @@ const ProductVarinatsTable: React.FC = () => {
   const navigate = useNavigate();
 
   const handleCreate = () => {
-    navigate("/app/create-product");
+    navigate("/app/create-product-variants/");
   };
 
   const handleEdit = (id: number) => {
@@ -131,7 +131,7 @@ const ProductVarinatsTable: React.FC = () => {
           style={{ width: "200px" }}
         >
           <FolderAddOutlined />
-          Create Product
+          Create Product Variant
         </Button>
         {/* <Search data={data} value={value} setValue={setValue} /> */}
       </div>

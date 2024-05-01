@@ -33,7 +33,6 @@ const ProductsTable: React.FC = () => {
   const search = useDebounce(value);
   const { data } = useSearchProduct(search);
   console.log(CatData);
-  
 
   const handleDelete = (id: number) => {
     mutate(id, {
@@ -70,7 +69,7 @@ const ProductsTable: React.FC = () => {
   };
 
   const handleVariant = () => {
-    navigate("/app/product-variants");
+    navigate(`/app/product-variants/`);
   };
 
   const columns: TableProps<DataType>["columns"] = [

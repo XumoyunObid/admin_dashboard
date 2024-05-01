@@ -1,35 +1,37 @@
 import { InboxOutlined, LoadingOutlined } from "@ant-design/icons";
-import {
-  Button,
-  Form,
-  Input,
-  message,
-  FormProps,
-  Upload,
-  Spin,
-  Image,
-} from "antd";
-import { useNavigate, useParams } from "react-router-dom";
+import { Button, Form, Input, message, FormProps, Upload, Spin } from "antd";
+import { useNavigate } from "react-router-dom";
 import useEditCategory from "../Service/Mutation/useEditCategory";
-import useGetCategories from "../Service/Queries/useGetCategory";
-import { useState } from "react";
+import React from "react";
+import useGetSingleCategory from "../Service/Queries/useGetSingleCategory";
 
 type FieldType = {
   title: string;
   image?: any;
 };
+interface EditSubProps {
+  setChildren: React.Dispatch<
+    React.SetStateAction<
+      {
+        id: number;
+        image: string;
+        title: string;
+      }[]
+    >
+  >;
+}
 
-const EditCategory = () => {
+const EditCategory: React.FC<EditSubProps> = ({ setChildren }) => {
   const navigate = useNavigate();
-  const { id } = useParams();
-  const [page] = useState(1);
-  const { data } = useGetCategories(page);
-  const { mutate, isLoading } = useEditCategory();
-  const product = data?.results.find((item) => item.id == Number(id));
+  const { data, isLoading } = useGetSingleCategory();
+  const { mutate } = useEditCategory();
+  // console.log(data);
+
+  setChildren(data?.children);
 
   const initialValues = {
-    title: product?.title || "",
-    image: product?.image || undefined,
+    title: data?.title || "",
+    image: data?.image || undefined,
   };
 
   const onFinish = async (values: FieldType) => {
@@ -61,82 +63,88 @@ const EditCategory = () => {
 
   return (
     <div>
-      <Form
-        name="basic"
-        initialValues={initialValues}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        layout="vertical"
-        style={{ width: "500px" }}
-      >
-        <Form.Item
-          label="Title"
-          name="title"
-          rules={[{ required: true, message: "Please input category title!" }]}
+      {isLoading ? (
+        <Spin />
+      ) : (
+        <Form
+          name="basic"
+          initialValues={initialValues}
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+          layout="vertical"
+          style={{ width: "500px" }}
         >
-          <Input />
-        </Form.Item>
-
-        <Form.Item
-          name="image"
-          rules={[
-            {
-              required: initialValues ? false : true,
-              message: "Please upload category image!",
-            },
-          ]}
-          valuePropName="file"
-        >
-          <Upload.Dragger
-            name="file"
-            beforeUpload={() => false}
-            maxCount={1}
-            listType="picture-card"
+          <Form.Item
+            label="Title"
+            name="title"
+            rules={[
+              { required: true, message: "Please input category title!" },
+            ]}
           >
-            <p className="ant-upload-drag-icon">
-              <InboxOutlined />
-            </p>
-            <p className="ant-upload-text">
-              Click or drag file to this area to upload
-            </p>
-          </Upload.Dragger>
-        </Form.Item>
-
-        {product?.image ? (
-          <Form.Item>
-            <Image
-              style={{
-                width: "100px",
-              }}
-              src={product?.image}
-            />
+            <Input />
           </Form.Item>
-        ) : (
-          ""
-        )}
 
-        <Form.Item>
-          <Button
-            type="primary"
-            size="large"
-            style={{ width: "100px" }}
-            htmlType="submit"
+          <Form.Item
+            name="image"
+            rules={[
+              {
+                // required: initialValues ? false : true,
+                message: "Please upload category image!",
+              },
+            ]}
+            valuePropName="file"
           >
-            {isLoading ? (
-              <Spin
-                indicator={
-                  <LoadingOutlined
-                    style={{ fontSize: 24, color: "white" }}
-                    spin
-                  />
-                }
+            <Upload.Dragger
+              name="file"
+              beforeUpload={() => false}
+              maxCount={1}
+              listType="picture-card"
+            >
+              <p className="ant-upload-drag-icon">
+                <InboxOutlined />
+              </p>
+              <p className="ant-upload-text">
+                Click or drag file to this area to upload
+              </p>
+            </Upload.Dragger>
+          </Form.Item>
+
+          {/* {data?.image ? (
+            <Form.Item>
+              <Image
+                style={{
+                  width: "100px",
+                }}
+                src={data?.image}
               />
-            ) : (
-              "Edit"
-            )}
-          </Button>
-        </Form.Item>
-      </Form>
+            </Form.Item>
+          ) : (
+            ""
+          )} */}
+
+          <Form.Item>
+            <Button
+              type="primary"
+              size="large"
+              style={{ width: "100px" }}
+              htmlType="submit"
+            >
+              {isLoading ? (
+                <Spin
+                  indicator={
+                    <LoadingOutlined
+                      style={{ fontSize: 24, color: "white" }}
+                      spin
+                    />
+                  }
+                />
+              ) : (
+                "Edit"
+              )}
+            </Button>
+          </Form.Item>
+        </Form>
+      )}
     </div>
   );
 };
